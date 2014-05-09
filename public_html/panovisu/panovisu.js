@@ -124,7 +124,7 @@ function panovisu(num_pano) {
                 for (var i = 0; i < hotSpot.length; i++)
                 {
                     //alert(object.id + "=>" + hotSpot[i]);
-                    if (object.id == hotSpot[i].id) {
+                    if (object.id === hotSpot[i].id) {
                         panoImage = hotSpot[i].image;
                         pano1.fadeOut(1000, function() {
                             isReloaded = true;
@@ -136,8 +136,8 @@ function panovisu(num_pano) {
 
             }
         }
-        else{
-            mouseMove=false;
+        else {
+            mouseMove = false;
         }
     });
 
@@ -176,7 +176,7 @@ function panovisu(num_pano) {
     $(document).on("mousemove", "#container-" + num_pano, function(evenement) {
 
         if (isUserInteracting === true) {
-            mouseMove=true;
+            mouseMove = true;
             if (mode === 1) {
                 deltaX = -(onPointerDownPointerX - evenement.clientX) * 0.01;
                 deltaY = (onPointerDownPointerY - evenement.clientY) * 0.01;
@@ -779,7 +779,7 @@ function panovisu(num_pano) {
      */
     function initPanoCube() {
 
-        $("#panovisuCharge-" + num_pano).html("0/6")
+        $("#panovisuCharge-" + num_pano).html("0/6");
         camera = new THREE.PerspectiveCamera(fov, pano.width() / pano.height(), 1, 1100);
         scene = new THREE.Scene();
         if (!isReloaded)
@@ -820,8 +820,8 @@ function panovisu(num_pano) {
         renderer.setSize(pano.width(), pano.height());
         container.append(renderer.domElement);
         setTimeout(function() {
-            creeHotspot(180, 0, "./panos/faces", "");
-            creeHotspot(90, -10, "./panos/piscine", "");
+            creeHotspot(180, 0, "./panos/faces", "Panovisu - Images de test");
+            creeHotspot(90, -10, "./panos/piscine", "La Piscine - Roubaix");
             affiche();
             pano1.fadeIn(2000);
             if (autoRotation === "oui")
@@ -924,11 +924,12 @@ function panovisu(num_pano) {
         $("<img>", {src: "panovisu/images/aide.png", alt: ""}).appendTo("#aide-" + num_pano);
 
     }
-    /**
-     * 
-     * @returns {undefined}
-     */
-    function creeInfo(fenetrePanoramique) {
+/**
+ * 
+ * @param {type} fenetrePanoramique
+ * @returns {undefined}
+ */
+function creeInfo(fenetrePanoramique) {
         $("<div>", {id: "infoPanovisu-" + num_pano, class: "infoPanovisu"}).appendTo("#" + fenetrePanoramique);
         panoInfo = "<b>Panovisu version " +
                 version +
@@ -938,10 +939,11 @@ function panovisu(num_pano) {
         $("#infoPanovisu-" + num_pano).css({width: "450px", height: "150px"});
         $("#infoPanovisu-" + num_pano).html(panoInfo);
     }
-    /**
-     * 
-     * @returns {undefined}
-     */
+/**
+ * 
+ * @param {type} fenetrePanoramique
+ * @returns {undefined}
+ */
     function creeAide(fenetrePanoramique) {
         $("<div>", {id: "aidePanovisu-" + num_pano, class: "aidePanovisu"}).appendTo("#" + fenetrePanoramique);
         panoInfo = "<span style='font-weight:bolder;font-size:1.2em;font-variant: small-caps;'>Aide à la Navigation</span><br><br><div style='width:100px;height:90px;padding-left:5px;display:inline-block;'><img style='width:90px' src='panovisu/images/aide_souris.png'/></div>" +
@@ -951,6 +953,14 @@ function panovisu(num_pano) {
         $("#aidePanovisu-" + num_pano).css({width: "400px", height: "220px"});
         $("#aidePanovisu-" + num_pano).html(panoInfo);
     }
+    /**
+     * 
+     * @param {type} long
+     * @param {type} lat
+     * @param {type} imgPano
+     * @param {type} texte
+     * @returns {undefined}
+     */
     function creeHotspot(long, lat, imgPano, texte) {
         var image = THREE.ImageUtils.loadTexture("panovisu/images/sprite2.png");
         var matSprite = new THREE.SpriteMaterial({map: image, color: 0xffffff, fog: true});

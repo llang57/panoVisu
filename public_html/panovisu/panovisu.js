@@ -17,7 +17,18 @@ function estTactile() {
 
 
 function panovisu(num_pano) {
+    var camera, scene, renderer;
+    function spot() {
+        this.id = 0;
+        this.image = "";
+        this.texte = "";
+    }
+
     var timer,
+            numHotspot = 0,
+            mouseMove,
+            isReloaded = false,
+            hotSpot = new Array(),
             mode = 1,
             longitude = 0,
             latitude = 0,
@@ -88,7 +99,47 @@ function panovisu(num_pano) {
         bPleinEcran = !bPleinEcran;
     });
 
+    $(document).on("click", "#container-" + num_pano, function(evenement) {
+        if (mouseMove === false) {
+            var mouse = new THREE.Vector2();
+            var projector = new THREE.Projector();
+            var raycaster = new THREE.Raycaster();
+            var position = $(this).offset();
+            var X = evenement.pageX - parseInt(position.left);
+            var Y = evenement.pageY - parseInt(position.top);
+            mouse.x = (X / $(this).width()) * 2 - 1;
+            mouse.y = -(Y / $(this).height()) * 2 + 1;
+            var vector = new THREE.Vector3(mouse.x, mouse.y, 1);
+            projector.unprojectVector(vector, camera);
+            //alert(projector.x + "," + projector.y + "," + projector.z);
 
+            raycaster.set(camera.position, vector.sub(camera.position).normalize());
+
+            var intersects = raycaster.intersectObjects(scene.children);
+            //alert(intersects.length);
+            if (intersects.length > 0) {
+                var intersect = intersects[ 0 ];
+                var object = intersect.object;
+                var positions = object.geometry.attributes.position.array;
+                for (var i = 0; i < hotSpot.length; i++)
+                {
+                    //alert(object.id + "=>" + hotSpot[i]);
+                    if (object.id == hotSpot[i].id) {
+                        panoImage = hotSpot[i].image;
+                        pano1.fadeOut(1000, function() {
+                            isReloaded = true;
+                            initPanoCube();
+                            //alert("Vous venez de cliquer sur le hotspot qui a l'id n°" + object.id);
+                        });
+                    }
+                }
+
+            }
+        }
+        else{
+            mouseMove=false;
+        }
+    });
 
     $(document).on("mousedown", "#container-" + num_pano, function(evenement) {
 
@@ -103,7 +154,7 @@ function panovisu(num_pano) {
         }
         onPointerDownPointerX = evenement.clientX;
         onPointerDownPointerY = evenement.clientY;
-        isUserInteracting = true;
+        isUserInteracting = true;        
         if (mode === 1) {
             deltaX = 0;
             deltaY = 0;
@@ -125,6 +176,7 @@ function panovisu(num_pano) {
     $(document).on("mousemove", "#container-" + num_pano, function(evenement) {
 
         if (isUserInteracting === true) {
+            mouseMove=true;
             if (mode === 1) {
                 deltaX = -(onPointerDownPointerX - evenement.clientX) * 0.01;
                 deltaY = (onPointerDownPointerY - evenement.clientY) * 0.01;
@@ -134,6 +186,31 @@ function panovisu(num_pano) {
                 latitude = (evenement.clientY - onPointerDownPointerY) * 0.1 + onPointerDownLat;
                 affiche();
             }
+        }
+        else {
+            var mouse = new THREE.Vector2();
+            var projector = new THREE.Projector();
+            var raycaster = new THREE.Raycaster();
+            var position = $(this).offset();
+            var X = evenement.pageX - parseInt(position.left);
+            var Y = evenement.pageY - parseInt(position.top);
+            mouse.x = (X / $(this).width()) * 2 - 1;
+            mouse.y = -(Y / $(this).height()) * 2 + 1;
+            var vector = new THREE.Vector3(mouse.x, mouse.y, 1);
+            projector.unprojectVector(vector, camera);
+            //alert(projector.x + "," + projector.y + "," + projector.z);
+
+            raycaster.set(camera.position, vector.sub(camera.position).normalize());
+
+            var intersects = raycaster.intersectObjects(scene.children);
+            //alert(intersects.length);
+            if (intersects.length > 0) {
+                pano.css({cursor: "pointer"});
+            }
+            else {
+                pano.css({cursor: "auto"});
+            }
+
         }
 
     });
@@ -386,7 +463,6 @@ function panovisu(num_pano) {
         event.stopPropagation();
     });
 
-    var camera, scene, renderer;
     /**
      * 
      * @returns {undefined}
@@ -557,6 +633,7 @@ function panovisu(num_pano) {
             $("#infoPanovisu-" + num_pano).css({display: "block"});
         }
     }
+
     function afficheAide() {
         posGauche = (pano.width() - $("#aidePanovisu-" + num_pano).width()) / 2;
         posHaut = (pano.height() - $("#aidePanovisu-" + num_pano).height()) / 2;
@@ -655,7 +732,9 @@ function panovisu(num_pano) {
             renderer.setSize(pano.width(), pano.height());
             container.append(renderer.domElement);
             affiche();
-            pano1.fadeIn(2000);
+            pano1.fadeIn(2000, function() {
+                afficheBarre(pano.width(), pano.height());
+            });
             if (autoRotation === "oui")
                 demarreAutoRotation();
         });
@@ -676,7 +755,10 @@ function panovisu(num_pano) {
             if (nbPanoCharges < 6)
                 $("#panovisuCharge-" + num_pano).html(nbPanoCharges + "/6")
             else
+            {
                 $("#panovisuCharge-" + num_pano).html("&nbsp;");
+                afficheBarre(pano.width(), pano.height());
+            }
             affiche();
         };
         image.src = path;
@@ -689,15 +771,31 @@ function panovisu(num_pano) {
      * @returns {undefined}
      */
     function initPanoCube() {
+
         $("#panovisuCharge-" + num_pano).html("0/6")
         camera = new THREE.PerspectiveCamera(fov, pano.width() / pano.height(), 1, 1100);
         scene = new THREE.Scene();
-        texture_placeholder = document.createElement('canvas');
-        texture_placeholder.width = 128;
-        texture_placeholder.height = 128;
-        var context = texture_placeholder.getContext('2d');
-        context.fillStyle = 'rgb( 128, 128, 128 )';
-        context.fillRect(0, 0, texture_placeholder.width, texture_placeholder.height);
+        if (!isReloaded)
+        {
+            texture_placeholder = document.createElement('canvas');
+            texture_placeholder.width = 128;
+            texture_placeholder.height = 128;
+            var context = texture_placeholder.getContext('2d');
+            context.fillStyle = 'rgb( 128, 128, 128 )';
+            context.fillRect(0, 0, texture_placeholder.width, texture_placeholder.height);
+            if (supportWebgl())
+            {
+                renderer = new THREE.WebGLRenderer();
+            }
+            else {
+                if (supportCanvas()) {
+                    renderer = new THREE.CanvasRenderer();
+                }
+                else {
+                    afficheErreur();
+                }
+            }
+        }
         var materials = [
             loadTexture(panoImage + '_r.jpg'), // droite   x+
             loadTexture(panoImage + '_l.jpg'), // gauche   x-
@@ -709,21 +807,14 @@ function panovisu(num_pano) {
         mesh = new THREE.Mesh(new THREE.CubeGeometry(300, 300, 300, 10, 10, 10), new THREE.MeshFaceMaterial(materials));
         mesh.scale.x = -1;
         scene.add(mesh);
-        if (supportWebgl())
-        {
-            renderer = new THREE.WebGLRenderer();
-        }
-        else {
-            if (supportCanvas()) {
-                renderer = new THREE.CanvasRenderer();
-            }
-            else {
-                afficheErreur();
-            }
-        }
+
+        //alert("ici");
+
         renderer.setSize(pano.width(), pano.height());
         container.append(renderer.domElement);
         setTimeout(function() {
+            creeHotspot(180, 0, "./panos/faces", "");
+            creeHotspot(90, -10, "./panos/piscine", "");
             affiche();
             pano1.fadeIn(2000);
             if (autoRotation === "oui")
@@ -797,11 +888,11 @@ function panovisu(num_pano) {
 
         cancelAnimationFrame(id);
     }
-/**
- * 
- * @returns {undefined}
- */
-    function creeBarreNavigation(){
+    /**
+     * 
+     * @returns {undefined}
+     */
+    function creeBarreNavigation() {
         $("<button>", {type: "button", id: "xmoins-" + num_pano, class: "xmoins", title: "déplacement à gauche"}).appendTo("#deplacement-" + num_pano);
         $("<img>", {src: "panovisu/images/gauche.png", alt: ""}).appendTo("#xmoins-" + num_pano);
         $("<button>", {type: "button", id: "ymoins-" + num_pano, class: "ymoins", title: "déplacement vers le haut"}).appendTo("#deplacement-" + num_pano);
@@ -824,13 +915,13 @@ function panovisu(num_pano) {
         $("<img>", {src: "panovisu/images/info.png", alt: ""}).appendTo("#binfo-" + num_pano);
         $("<button>", {type: "button", id: "aide-" + num_pano, class: "aide", title: "Aide"}).appendTo("#outils-" + num_pano);
         $("<img>", {src: "panovisu/images/aide.png", alt: ""}).appendTo("#aide-" + num_pano);
-        
+
     }
-/**
- * 
- * @returns {undefined}
- */
-    function creeInfo(){
+    /**
+     * 
+     * @returns {undefined}
+     */
+    function creeInfo(fenetrePanoramique) {
         $("<div>", {id: "infoPanovisu-" + num_pano, class: "infoPanovisu"}).appendTo("#" + fenetrePanoramique);
         panoInfo = "<b>Panovisu version " +
                 version +
@@ -838,20 +929,43 @@ function panovisu(num_pano) {
                 "Utilise la bibliothèque <a href='http://threejs.org/' target='_blank' title='voir la page de three.js'>Three.js</a>" +
                 "<br><br>&copy; Laurent LANG (2014)<br><div id='panovisuCharge-" + num_pano + "'>&nbsp;</div>cliquez pour fermer la fenêtre";
         $("#infoPanovisu-" + num_pano).css({width: "450px", height: "150px"});
-        $("#infoPanovisu-" + num_pano).html(panoInfo);        
+        $("#infoPanovisu-" + num_pano).html(panoInfo);
     }
-/**
- * 
- * @returns {undefined}
- */    
-    function creeAide(){
+    /**
+     * 
+     * @returns {undefined}
+     */
+    function creeAide(fenetrePanoramique) {
         $("<div>", {id: "aidePanovisu-" + num_pano, class: "aidePanovisu"}).appendTo("#" + fenetrePanoramique);
-        panoInfo = "<span style='font-weight:bolder;font-size:1.2em;font-variant: small-caps;'>Aide à la Navigation</span><br><br><div style='width:100px;height:90px;padding-left:5px;display:inline-block;'><img style='width:90px' src='panovisu/images/aide_souris.png'/></div>"+
-            "<div style='width : 270px;display:inline-block;vertical-align:top; text-align: justify;'>Pour vous déplacer dans la vue cliquez avec le bouton gauche de la souris "+
-            "sur le panoramique puis déplacez la souris en maintenant le bouton de la souris enfoncé<br><br>Vous pouvez également utiliser le menu pour vous déplacer</div>"+
-            "<div><br><br>cliquez pour fermer la fenêtre</div>";
+        panoInfo = "<span style='font-weight:bolder;font-size:1.2em;font-variant: small-caps;'>Aide à la Navigation</span><br><br><div style='width:100px;height:90px;padding-left:5px;display:inline-block;'><img style='width:90px' src='panovisu/images/aide_souris.png'/></div>" +
+                "<div style='width : 270px;display:inline-block;vertical-align:top; text-align: justify;'>Pour vous déplacer dans la vue cliquez avec le bouton gauche de la souris " +
+                "sur le panoramique puis déplacez la souris en maintenant le bouton de la souris enfoncé<br><br>Vous pouvez également utiliser le menu pour vous déplacer</div>" +
+                "<div><br><br>cliquez pour fermer la fenêtre</div>";
         $("#aidePanovisu-" + num_pano).css({width: "400px", height: "220px"});
-        $("#aidePanovisu-" + num_pano).html(panoInfo);        
+        $("#aidePanovisu-" + num_pano).html(panoInfo);
+    }
+    function creeHotspot(long, lat, imgPano, texte) {
+        var image = THREE.ImageUtils.loadTexture("panovisu/images/sprite2.png");
+        var matSprite = new THREE.SpriteMaterial({map: image, color: 0xffffff, fog: true});
+        var sprite = new THREE.Sprite(matSprite);
+        phi = THREE.Math.degToRad(90 - lat);
+        theta = THREE.Math.degToRad(long);
+        var vect = new THREE.Vector3();
+        vect.setX(Math.sin(phi) * Math.cos(theta));
+        vect.setY(Math.cos(phi));
+        vect.setZ(Math.sin(phi) * Math.sin(theta));
+        hotSpot[numHotspot] = new spot();
+        hotSpot[numHotspot].id = sprite.id;
+        hotSpot[numHotspot].image = imgPano;
+        hotSpot[numHotspot].texte = texte;
+        numHotspot += 1;
+
+        radius = 10;
+        sprite.position.set(vect.x, vect.y, vect.z);
+        sprite.position.normalize();
+        sprite.position.multiplyScalar(radius);
+        scene.add(sprite);
+        affiche();
     }
     /**
      * Création du contexte de fenetre
@@ -887,11 +1001,11 @@ function panovisu(num_pano) {
          * On rajoute enfin les boutons & les fenêtre d'information.
          */
         creeBarreNavigation();
-        creeInfo();
-        creeAide();
+        creeInfo(fenetrePanoramique);
+        creeAide(fenetrePanoramique);
         /**
          * Création des racourcis vers les différentes fenêtres
-         */        
+         */
         container = $("#container-" + num_pano);
         pano = $("#" + fenetrePanoramique);
         pano1 = $("#pano1-" + num_pano);

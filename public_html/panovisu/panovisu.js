@@ -124,7 +124,7 @@ function panovisu(num_pano) {
                 for (var i = 0; i < hotSpot.length; i++)
                 {
                     //alert(object.id + "=>" + hotSpot[i]);
-                    if (object.id === hotSpot[i].id) {
+                    if (object.id == hotSpot[i].id) {
                         panoImage = hotSpot[i].image;
                         pano1.fadeOut(1000, function() {
                             isReloaded = true;
@@ -136,8 +136,8 @@ function panovisu(num_pano) {
 
             }
         }
-        else {
-            mouseMove = false;
+        else{
+            mouseMove=false;
         }
     });
 
@@ -176,7 +176,7 @@ function panovisu(num_pano) {
     $(document).on("mousemove", "#container-" + num_pano, function(evenement) {
 
         if (isUserInteracting === true) {
-            mouseMove = true;
+            mouseMove=true;
             if (mode === 1) {
                 deltaX = -(onPointerDownPointerX - evenement.clientX) * 0.01;
                 deltaY = (onPointerDownPointerY - evenement.clientY) * 0.01;
@@ -779,7 +779,7 @@ function panovisu(num_pano) {
      */
     function initPanoCube() {
 
-        $("#panovisuCharge-" + num_pano).html("0/6");
+        $("#panovisuCharge-" + num_pano).html("0/6")
         camera = new THREE.PerspectiveCamera(fov, pano.width() / pano.height(), 1, 1100);
         scene = new THREE.Scene();
         if (!isReloaded)
@@ -820,8 +820,8 @@ function panovisu(num_pano) {
         renderer.setSize(pano.width(), pano.height());
         container.append(renderer.domElement);
         setTimeout(function() {
-            creeHotspot(180, 0, "./panos/faces", "Panovisu - Images de test");
-            creeHotspot(90, -10, "./panos/piscine", "La Piscine - Roubaix");
+            creeHotspot(180, 0, "./panos/faces", "");
+            creeHotspot(90, -10, "./panos/piscine", "");
             affiche();
             pano1.fadeIn(2000);
             if (autoRotation === "oui")
@@ -926,9 +926,9 @@ function panovisu(num_pano) {
     }
     /**
      * 
-     * @param {type} fenetrePanoramique
      * @returns {undefined}
-     */    function creeInfo(fenetrePanoramique) {
+     */
+    function creeInfo(fenetrePanoramique) {
         $("<div>", {id: "infoPanovisu-" + num_pano, class: "infoPanovisu"}).appendTo("#" + fenetrePanoramique);
         panoInfo = "<b>Panovisu version " +
                 version +
@@ -940,7 +940,6 @@ function panovisu(num_pano) {
     }
     /**
      * 
-     * @param {type} fenetrePanoramique
      * @returns {undefined}
      */
     function creeAide(fenetrePanoramique) {

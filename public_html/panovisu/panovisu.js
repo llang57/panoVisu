@@ -23,6 +23,8 @@ function panovisu(num_pano) {
         this.id = 0;
         this.image = "";
         this.texte = "";
+        this.long=0;
+        this.lat=0;
     }
 
     var timer,

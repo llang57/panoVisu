@@ -18,7 +18,7 @@ function estTactile() {
 
 function panovisu(num_pano) {
     var camera, scene, renderer;
-    
+
     function spot() {
         this.id = 0;
         this.image = "";
@@ -126,7 +126,10 @@ function panovisu(num_pano) {
                     //alert(object.id + "=>" + hotSpot[i]);
                     if (object.id === hotSpot[i].id) {
                         panoImage = hotSpot[i].image;
+                        var titre = hotSpot[i].texte;
+                        $("#info-" + num_pano).fadeOut(1000);
                         pano1.fadeOut(1000, function() {
+                            $("#info-" + num_pano).html(titre);
                             isReloaded = true;
                             initPanoCube();
                             //alert("Vous venez de cliquer sur le hotspot qui a l'id n°" + object.id);
@@ -154,7 +157,7 @@ function panovisu(num_pano) {
         }
         onPointerDownPointerX = evenement.clientX;
         onPointerDownPointerY = evenement.clientY;
-        isUserInteracting = true;        
+        isUserInteracting = true;
         if (mode === 1) {
             deltaX = 0;
             deltaY = 0;
@@ -823,7 +826,10 @@ function panovisu(num_pano) {
             creeHotspot(180, 0, "./panos/faces", "Panovisu - Images de test");
             creeHotspot(90, -10, "./panos/piscine", "La Piscine - Roubaix");
             affiche();
-            pano1.fadeIn(2000);
+            $("#info-" + num_pano).fadeIn(2000);
+            pano1.fadeIn(2000, function() {
+                affiche();
+            });
             if (autoRotation === "oui")
                 demarreAutoRotation();
         }, 1000);
@@ -924,12 +930,12 @@ function panovisu(num_pano) {
         $("<img>", {src: "panovisu/images/aide.png", alt: ""}).appendTo("#aide-" + num_pano);
 
     }
-/**
- * 
- * @param {type} fenetrePanoramique
- * @returns {undefined}
- */
-function creeInfo(fenetrePanoramique) {
+    /**
+     * 
+     * @param {type} fenetrePanoramique
+     * @returns {undefined}
+     */
+    function creeInfo(fenetrePanoramique) {
         $("<div>", {id: "infoPanovisu-" + num_pano, class: "infoPanovisu"}).appendTo("#" + fenetrePanoramique);
         panoInfo = "<b>Panovisu version " +
                 version +
@@ -939,11 +945,11 @@ function creeInfo(fenetrePanoramique) {
         $("#infoPanovisu-" + num_pano).css({width: "450px", height: "150px"});
         $("#infoPanovisu-" + num_pano).html(panoInfo);
     }
-/**
- * 
- * @param {type} fenetrePanoramique
- * @returns {undefined}
- */
+    /**
+     * 
+     * @param {type} fenetrePanoramique
+     * @returns {undefined}
+     */
     function creeAide(fenetrePanoramique) {
         $("<div>", {id: "aidePanovisu-" + num_pano, class: "aidePanovisu"}).appendTo("#" + fenetrePanoramique);
         panoInfo = "<span style='font-weight:bolder;font-size:1.2em;font-variant: small-caps;'>Aide à la Navigation</span><br><br><div style='width:100px;height:90px;padding-left:5px;display:inline-block;'><img style='width:90px' src='panovisu/images/aide_souris.png'/></div>" +

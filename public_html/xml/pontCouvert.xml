@@ -15,16 +15,33 @@ and open the template in the editor.
         afficheInfo="non"
     />
     <boutons 
+        couleur="cyan"
+        bordure="blue"        
         deplacements="oui" 
-        zoom="oui" 
+        zoom="non" 
         outils="oui"
-        fs="non" 
+        fs="oui" 
         souris="non" 
-        rotation="oui" 
+        rotation="non" 
         positionX="center"
         positionY="bottom" 
         dX="0" 
         dY="10"
         visible="oui"
     />
+    <point
+        long="180"
+        lat="-10"
+        xml="xml/beauport.xml"
+        image="panovisu/images/sprite2.png"
+        info="Abbaye Maritime de Beauport"        
+    />
+    <point
+        long="95"
+        lat="5"
+        xml="xml/piscine.xml"
+        image="panovisu/images/sprite2.png"
+        info="Roubaix - La piscine"        
+    />
+    
 </scene>

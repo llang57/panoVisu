@@ -11,9 +11,11 @@ and open the template in the editor.
         image="panos/BeauportCellier" 
         titre="Abbaye Maritime de Beauport - le Cellier" 
         type="cube"
-        affInfo="non"
+        affInfo="non"        
     />
     <boutons 
+        couleur="green"
+        bordure="black"
         deplacements="non" 
         zoom="oui" 
         outils="oui"
@@ -26,4 +28,19 @@ and open the template in the editor.
         dY="10"
         visible="oui"
     />
+    <point
+        long="180"
+        lat="-10"
+        xml="xml/pontCouvert.xml"
+        image="panovisu/images/sprite3.png"
+        info="Strasbourg - les ponts couverts"
+        />
+    <point
+        long="95"
+        lat="5"
+        xml="xml/piscine.xml"
+        image="panovisu/images/sprite3.png"
+        info="Roubaix - La piscine C'est beau éè non ????"
+        />
+    
 </scene>

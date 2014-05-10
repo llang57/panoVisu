@@ -27,11 +27,22 @@ function panovisu(num_pano) {
         this.lat=0;
     }
 
+    function pointInteret() {
+        this.long = 0;
+        this.lat = 0;
+        this.xml = "";
+        this.image = "";
+        this.info = "";
+    }
+
     var timer,
+            i,
+            numHS,
             numHotspot = 0,
             mouseMove,
             isReloaded = false,
             hotSpot = new Array(),
+            pointsInteret = new Array(),
             mode = 1,
             longitude = 0,
             latitude = 0,
@@ -68,25 +79,27 @@ function panovisu(num_pano) {
      * 
      * @type String|@exp;_L1@pro;panoImage|@exp;XMLPano@call;attr
      */
-    var panoImage = "faces",
-            panoTitre = "",
-            panoType = "cube",
-            affInfo = "oui",
-            bAfficheInfo = true,
-            bAfficheAide = false,
-            afficheTitre = "oui",
-            zooms = "oui",
-            outils = "oui",
-            deplacements = "oui",
-            fs = "oui",
-            autoR = "oui",
-            souris = "oui",
-            boutons = "oui",
-            autoRotation = "non",
-            positionX = "center",
-            positionY = "bottom",
-            dX = "0",
-            dY = "10",
+    var panoImage,
+            couleur,
+            bordure,
+            panoTitre,
+            panoType,
+            affInfo,
+            bAfficheInfo,
+            bAfficheAide,
+            afficheTitre,
+            zooms,
+            outils,
+            deplacements,
+            fs,
+            autoR,
+            souris,
+            boutons,
+            autoRotation,
+            positionX,
+            positionY,
+            dX,
+            dY,
             mesh,
             container,
             pano,
@@ -122,19 +135,13 @@ function panovisu(num_pano) {
             if (intersects.length > 0) {
                 var intersect = intersects[ 0 ];
                 var object = intersect.object;
-                var positions = object.geometry.attributes.position.array;
                 for (var i = 0; i < hotSpot.length; i++)
                 {
-                    //alert(object.id + "=>" + hotSpot[i]);
                     if (object.id === hotSpot[i].id) {
-                        panoImage = hotSpot[i].image;
-                        var titre = hotSpot[i].texte;
+                        numHS = i;
                         $("#info-" + num_pano).fadeOut(1000);
                         pano1.fadeOut(1000, function() {
-                            $("#info-" + num_pano).html(titre);
-                            isReloaded = true;
-                            initPanoCube();
-                            //alert("Vous venez de cliquer sur le hotspot qui a l'id n°" + object.id);
+                            chargeNouveauPano(numHS);
                         });
                     }
                 }
@@ -181,6 +188,7 @@ function panovisu(num_pano) {
     $(document).on("mousemove", "#container-" + num_pano, function(evenement) {
 
         if (isUserInteracting === true) {
+
             mouseMove = true;
             if (mode === 1) {
                 deltaX = -(onPointerDownPointerX - evenement.clientX) * 0.01;
@@ -193,6 +201,7 @@ function panovisu(num_pano) {
             }
         }
         else {
+            $("#infoBulle-" + num_pano).hide();
             var mouse = new THREE.Vector2();
             var projector = new THREE.Projector();
             var raycaster = new THREE.Raycaster();
@@ -211,9 +220,25 @@ function panovisu(num_pano) {
             //alert(intersects.length);
             if (intersects.length > 0) {
                 pano.css({cursor: "pointer"});
+                var intersect = intersects[ 0 ];
+                var object = intersect.object;
+                var positions = object.geometry.attributes.position.array;
+                for (var i = 0; i < hotSpot.length; i++)
+                {
+                    if (object.id === hotSpot[i].id) {
+                        haut = Y - 5;
+                        gauche = X + 20;
+                        (pointsInteret[i].info !== "") ? $("#infoBulle-" + num_pano).html(pointsInteret[i].info) : $("#infoBulle-" + num_pano).html(pointsInteret[i].xml);
+                        $("#infoBulle-" + num_pano).css({top: haut + "px", left: gauche + "px"});
+                        $("#infoBulle-" + num_pano).show();
+                    }
+
+                }
+
             }
             else {
                 pano.css({cursor: "auto"});
+//                $("#infoBulle-" + num_pano).hide();
             }
 
         }
@@ -609,6 +634,18 @@ function panovisu(num_pano) {
 
     }
 
+    function chargeNouveauPano(nHotspot) {
+        $("#infoBulle-" + num_pano).hide();
+        $("#infoBulle-" + num_pano).html("");
+//        alert("n° Hotspot : " + nHotspot);
+        isReloaded = true;
+        xmlFile = pointsInteret[nHotspot].xml;
+        hotSpot = new Array();
+        pointsInteret = new Array();
+        numHotspot = 0;
+        chargeXML(xmlFile);
+    }
+
     /**
      * 
      * @returns {undefined}
@@ -671,22 +708,16 @@ function panovisu(num_pano) {
      * 
      * @param {type} fenetre
      * @returns {undefined}
-     */    function init(fenetre) {
+     */
+    function init(fenetre) {
         $("#info-" + num_pano).html(panoTitre);
-        if (boutons === "oui")
-            $("#boutons-" + num_pano).show();
-        if (deplacements === "oui")
-            $("#deplacement-" + num_pano).css({display: "inline-block"});
-        if (zooms === "oui")
-            $("#zoom-" + num_pano).css({display: "inline-block"});
-        if (outils === "oui")
-            $("#outils-" + num_pano).css({display: "inline-block"});
-        if (fs === "oui")
-            $("#pleinEcran-" + num_pano).show();
-        if (autoR === "oui")
-            $("#auto-" + num_pano).show();
-        if (souris === "oui")
-            $("#souris-" + num_pano).show();
+        (boutons === "oui") ? $("#boutons-" + num_pano).show() : $("#boutons-" + num_pano).hide();
+        (deplacements === "oui") ? $("#deplacement-" + num_pano).css({display: "inline-block"}) : $("#deplacement-" + num_pano).hide();
+        (zooms === "oui") ? $("#zoom-" + num_pano).css({display: "inline-block"}) : $("#zoom-" + num_pano).hide();
+        (outils === "oui") ? $("#outils-" + num_pano).css({display: "inline-block"}) : $("#outils-" + num_pano).hide();
+        (fs === "oui") ? $("#pleinEcran-" + num_pano).show() : $("#pleinEcran-" + num_pano).hide();
+        (autoR === "oui") ? $("#auto-" + num_pano).show() : $("#auto-" + num_pano).hide;
+        (souris === "oui") ? $("#souris-" + num_pano).show() : $("#souris-" + num_pano).hide();
         if (afficheTitre === "oui")
             $("#info-" + num_pano).fadeIn(2500);
         if (fenetreUniteX === "%") {
@@ -743,9 +774,15 @@ function panovisu(num_pano) {
             }
             renderer.setSize(pano.width(), pano.height());
             container.append(renderer.domElement);
+            for (var i = 0; i < pointsInteret.length; i++)
+            {
+                var pi = pointsInteret[i];
+                creeHotspot(pi.long, pi.lat, pi.xml, pi.image);
+            }
             affiche();
             pano1.fadeIn(2000, function() {
                 afficheBarre(pano.width(), pano.height());
+                affiche();
             });
             if (autoRotation === "oui")
                 demarreAutoRotation();
@@ -825,8 +862,11 @@ function panovisu(num_pano) {
         renderer.setSize(pano.width(), pano.height());
         container.append(renderer.domElement);
         setTimeout(function() {
-            creeHotspot(180, 0, "./panos/faces", "Panovisu - Images de test");
-            creeHotspot(90, -10, "./panos/piscine", "La Piscine - Roubaix");
+            for (var i = 0; i < pointsInteret.length; i++)
+            {
+                var pi = pointsInteret[i];
+                creeHotspot(pi.long, pi.lat, pi.xml, pi.image);
+            }
             affiche();
             $("#info-" + num_pano).fadeIn(2000);
             pano1.fadeIn(2000, function() {
@@ -908,27 +948,38 @@ function panovisu(num_pano) {
      * @returns {undefined}
      */
     function creeBarreNavigation() {
-        $("<button>", {type: "button", id: "xmoins-" + num_pano, class: "xmoins", title: "déplacement à gauche"}).appendTo("#deplacement-" + num_pano);
+        $("<button>", {type: "button", id: "xmoins-" + num_pano, class: "xmoins", title: "déplacement à gauche",
+            style: "background-color : " + couleur + ";border : 1px solid " + bordure + ";"}).appendTo("#deplacement-" + num_pano);
         $("<img>", {src: "panovisu/images/gauche.png", alt: ""}).appendTo("#xmoins-" + num_pano);
-        $("<button>", {type: "button", id: "ymoins-" + num_pano, class: "ymoins", title: "déplacement vers le haut"}).appendTo("#deplacement-" + num_pano);
+        $("<button>", {type: "button", id: "ymoins-" + num_pano, class: "ymoins", title: "déplacement vers le haut",
+            style: "background-color : " + couleur + ";border : 1px solid " + bordure + ";"}).appendTo("#deplacement-" + num_pano);
         $("<img>", {src: "panovisu/images/haut.png", alt: ""}).appendTo("#ymoins-" + num_pano);
-        $("<button>", {type: "button", id: "yplus-" + num_pano, class: "yplus", title: "déplacement vers le bas"}).appendTo("#deplacement-" + num_pano);
+        $("<button>", {type: "button", id: "yplus-" + num_pano, class: "yplus", title: "déplacement vers le bas",
+            style: "background-color : " + couleur + ";border : 1px solid " + bordure + ";"}).appendTo("#deplacement-" + num_pano);
         $("<img>", {src: "panovisu/images/bas.png", alt: ""}).appendTo("#yplus-" + num_pano);
-        $("<button>", {type: "button", id: "xplus-" + num_pano, class: "xplus", title: "déplacement à droite"}).appendTo("#deplacement-" + num_pano);
+        $("<button>", {type: "button", id: "xplus-" + num_pano, class: "xplus", title: "déplacement à droite",
+            style: "background-color : " + couleur + ";border : 1px solid " + bordure + ";"}).appendTo("#deplacement-" + num_pano);
         $("<img>", {src: "panovisu/images/droite.png", alt: ""}).appendTo("#xplus-" + num_pano);
-        $("<button>", {type: "button", id: "zoomPlus-" + num_pano, class: "zoomPlus", title: "zoom +"}).appendTo("#zoom-" + num_pano);
+        $("<button>", {type: "button", id: "zoomPlus-" + num_pano, class: "zoomPlus", title: "zoom +",
+            style: "background-color : " + couleur + ";border : 1px solid " + bordure + ";"}).appendTo("#zoom-" + num_pano);
         $("<img>", {src: "panovisu/images/zoomin.png", alt: ""}).appendTo("#zoomPlus-" + num_pano);
-        $("<button>", {type: "button", id: "zoomMoins-" + num_pano, class: "zoomMoins", title: "zoom -"}).appendTo("#zoom-" + num_pano);
+        $("<button>", {type: "button", id: "zoomMoins-" + num_pano, class: "zoomMoins", title: "zoom -",
+            style: "background-color : " + couleur + ";border : 1px solid " + bordure + ";"}).appendTo("#zoom-" + num_pano);
         $("<img>", {src: "panovisu/images/zoomout.png", alt: ""}).appendTo("#zoomMoins-" + num_pano);
-        $("<button>", {type: "button", id: "pleinEcran-" + num_pano, class: "pleinEcran", title: "plein ecran"}).appendTo("#outils-" + num_pano);
+        $("<button>", {type: "button", id: "pleinEcran-" + num_pano, class: "pleinEcran", title: "plein ecran",
+            style: "background-color : " + couleur + ";border : 1px solid " + bordure + ";"}).appendTo("#outils-" + num_pano);
         $("<img>", {src: "panovisu/images/fs.png", alt: ""}).appendTo("#pleinEcran-" + num_pano);
-        $("<button>", {type: "button", id: "souris-" + num_pano, class: "souris", title: "change le mode de déplacement de la souris"}).appendTo("#outils-" + num_pano);
+        $("<button>", {type: "button", id: "souris-" + num_pano, class: "souris", title: "change le mode de déplacement de la souris",
+            style: "background-color : " + couleur + ";border : 1px solid " + bordure + ";"}).appendTo("#outils-" + num_pano);
         $("<img>", {src: "panovisu/images/souris.png", alt: ""}).appendTo("#souris-" + num_pano);
-        $("<button>", {type: "button", id: "auto-" + num_pano, class: "auto", title: "autorotation (M/A)"}).appendTo("#outils-" + num_pano);
+        $("<button>", {type: "button", id: "auto-" + num_pano, class: "auto", title: "autorotation (M/A)",
+            style: "background-color : " + couleur + ";border : 1px solid " + bordure + ";"}).appendTo("#outils-" + num_pano);
         $("<img>", {src: "panovisu/images/rotation.png", alt: ""}).appendTo("#auto-" + num_pano);
-        $("<button>", {type: "button", id: "binfo-" + num_pano, class: "binfo", title: "A propos ..."}).appendTo("#outils-" + num_pano);
+        $("<button>", {type: "button", id: "binfo-" + num_pano, class: "binfo", title: "A propos ...",
+            style: "background-color : " + couleur + ";border : 1px solid " + bordure + ";"}).appendTo("#outils-" + num_pano);
         $("<img>", {src: "panovisu/images/info.png", alt: ""}).appendTo("#binfo-" + num_pano);
-        $("<button>", {type: "button", id: "aide-" + num_pano, class: "aide", title: "Aide"}).appendTo("#outils-" + num_pano);
+        $("<button>", {type: "button", id: "aide-" + num_pano, class: "aide", title: "Aide",
+            style: "background-color : " + couleur + ";border : 1px solid " + bordure + ";"}).appendTo("#outils-" + num_pano);
         $("<img>", {src: "panovisu/images/aide.png", alt: ""}).appendTo("#aide-" + num_pano);
 
     }
@@ -969,8 +1020,8 @@ function panovisu(num_pano) {
      * @param {type} texte
      * @returns {undefined}
      */
-    function creeHotspot(long, lat, imgPano, texte) {
-        var image = THREE.ImageUtils.loadTexture("panovisu/images/sprite2.png");
+    function creeHotspot(long, lat, xml, img) {
+        var image = THREE.ImageUtils.loadTexture(img);
         var matSprite = new THREE.SpriteMaterial({map: image, color: 0xffffff, fog: true});
         var sprite = new THREE.Sprite(matSprite);
         phi = THREE.Math.degToRad(90 - lat);
@@ -981,8 +1032,10 @@ function panovisu(num_pano) {
         vect.setZ(Math.sin(phi) * Math.sin(theta));
         hotSpot[numHotspot] = new spot();
         hotSpot[numHotspot].id = sprite.id;
-        hotSpot[numHotspot].image = imgPano;
-        hotSpot[numHotspot].texte = texte;
+        hotSpot[numHotspot].image = xml;
+        hotSpot[numHotspot].texte = "";
+//        alert("ajout hotspot id= "+hotSpot[numHotspot].id+" xml : " + xml + " n°" + numHotspot);
+
         numHotspot += 1;
 
         radius = 10;
@@ -992,6 +1045,106 @@ function panovisu(num_pano) {
         scene.add(sprite);
         affiche();
     }
+
+    function chargeXML(xmlFile) {
+        $.get(xmlFile,
+                function(d) {
+                    panoImage = "faces";
+                    couleur = "#ffffff";
+                    bordure = "#777";
+                    panoTitre = "";
+                    panoType = "cube";
+                    affInfo = "oui";
+                    bAfficheInfo = true;
+                    bAfficheAide = false;
+                    afficheTitre = "oui";
+                    zooms = "oui";
+                    outils = "oui";
+                    deplacements = "oui";
+                    fs = "oui";
+                    autoR = "oui";
+                    souris = "oui";
+                    boutons = "oui";
+                    autoRotation = "non";
+                    positionX = "center";
+                    positionY = "bottom";
+                    dX = "0";
+                    dY = "10";
+                    /**
+                     * Définition du panoramique à afficher 
+                     */
+                    var XMLPano = $(d).find('pano');
+                    panoImage = XMLPano.attr('image') || panoImage;
+                    panoTitre = XMLPano.attr('titre') || panoTitre;
+                    panoType = XMLPano.attr('type') || panoType;
+                    autoRotation = XMLPano.attr('rotation') || autoRotation;
+                    longitude = XMLPano.attr('regardX') || longitude;
+                    latitude = XMLPano.attr('regardY') || latitude;
+                    fov = XMLPano.attr('champVision') || fov;
+                    afficheTitre = XMLPano.attr('afficheTitre') || afficheTitre;
+                    affInfo = XMLPano.attr('afficheInfo') || affInfo;
+                    if (isReloaded) {
+                        affInfo = false;
+                    }
+                    if (affInfo === "oui") {
+                        bAfficheInfo = true;
+                    } else {
+                        bAfficheInfo = false;
+                    }
+                    /**
+                     * Défintion pour la barre des boutons
+                     */
+                    var XMLBoutons = $(d).find('boutons');
+                    deplacements = XMLBoutons.attr('deplacements') || deplacements;
+                    zooms = XMLBoutons.attr('zoom') || zooms;
+                    outils = XMLBoutons.attr('outils') || outils;
+                    fs = XMLBoutons.attr('fs') || fs;
+                    autoR = XMLBoutons.attr('rotation') || autoR;
+                    souris = XMLBoutons.attr('souris') || souris;
+                    boutons = XMLBoutons.attr('visible') || boutons;
+                    positionX = XMLBoutons.attr('positionX') || positionX;
+                    positionY = XMLBoutons.attr('positionY') || positionY;
+                    couleur = XMLBoutons.attr('couleur') || couleur;
+                    bordure = XMLBoutons.attr('bordure') || bordure;
+                    $("#xmoins-" + num_pano + ",#xplus-" + num_pano + ",#ymoins-" + num_pano + ",#yplus-" + num_pano + ",#zoomPlus-" + num_pano + ",#zoomMoins-" + num_pano +
+                            ",#pleinEcran-" + num_pano + ",#souris-" + num_pano + ",#auto-" + num_pano + ",#binfo-" + num_pano + ",#aide-" + num_pano).css({
+                        backgroundColor: couleur,
+                        border: "1px solid " + bordure
+                    });
+                    //alert(couleur);
+                    dX = XMLBoutons.attr('dX') || dX;
+                    dY = XMLBoutons.attr('dY') || dY;
+                    i = 0;
+                    $(d).find('point').each(function() {
+                        pointsInteret[i] = new pointInteret();
+                        pointsInteret[i].xml = $(this).attr('xml');
+                        pointsInteret[i].info = $(this).attr('info') || "";
+                        pointsInteret[i].image = $(this).attr('image') || "panovisu/images/sprite2.png";
+                        pointsInteret[i].long = $(this).attr('long') || 0;
+                        pointsInteret[i].lat = $(this).attr('lat') || 0;
+//                        alert("i : "+i+" ==>"+pointsInteret[i].xml+" ("+pointsInteret[i].image+") : "+pointsInteret[i].long+","+pointsInteret[i].lat);
+                        i++;
+                    });
+                    /**
+                     * Initialisation de l'interface
+                     */
+                    init(fenPanoramique);
+                    /**
+                     * Initialisation de l'affichage du panoramique
+                     */
+                    switch (panoType)
+                    {
+                        case "cube":
+                            initPanoCube();
+                            break;
+                        case "sphere":
+                            initPanoSphere();
+                            break;
+                    }
+                });
+
+    }
+
     /**
      * Création du contexte de fenetre
      * 
@@ -1005,6 +1158,8 @@ function panovisu(num_pano) {
         var fenetrePanoramique = "panovisu-" + num_pano;
         $("<div>", {id: fenetrePanoramique, class: "panovisu", style: "width : 100%;height : 100%;position: relative;"}).appendTo("#" + fenetre);
         $("<div>", {id: "info-" + num_pano, class: "info"}).appendTo("#" + fenetrePanoramique);
+        $("<div>", {id: "infoBulle-" + num_pano, class: "infoBulle", style: "display:none;position: absolute;"}).appendTo("#" + fenetrePanoramique);
+        $("#infoBulle-" + num_pano).html("infoBulle");
         /**
          * création du conteneur du panoramique
          */
@@ -1087,58 +1242,7 @@ function panovisu(num_pano) {
         /**
          * lecture du fichier XML
          */
-        $.get(xmlFile,
-                function(d) {
-                    /**
-                     * Définition du panoramique à afficher 
-                     */
-                    var XMLPano = $(d).find('pano');
-                    panoImage = XMLPano.attr('image') || panoImage;
-                    panoTitre = XMLPano.attr('titre') || panoTitre;
-                    panoType = XMLPano.attr('type') || panoType;
-                    autoRotation = XMLPano.attr('rotation') || autoRotation;
-                    longitude = XMLPano.attr('regardX') || longitude;
-                    latitude = XMLPano.attr('regardY') || latitude;
-                    fov = XMLPano.attr('champVision') || fov;
-                    afficheTitre = XMLPano.attr('afficheTitre') || afficheTitre;
-                    affInfo = XMLPano.attr('afficheInfo') || affInfo;
-                    if (affInfo === "oui") {
-                        bAfficheInfo = true;
-                    } else {
-                        bAfficheInfo = false;
-                    }
-                    /**
-                     * Défintion pour la barre des boutons
-                     */
-                    var XMLBoutons = $(d).find('boutons');
-                    deplacements = XMLBoutons.attr('deplacements') || deplacements;
-                    zooms = XMLBoutons.attr('zoom') || zooms;
-                    outils = XMLBoutons.attr('outils') || outils;
-                    fs = XMLBoutons.attr('fs') || fs;
-                    autoR = XMLBoutons.attr('rotation') || autoR;
-                    souris = XMLBoutons.attr('souris') || souris;
-                    boutons = XMLBoutons.attr('visible') || boutons;
-                    positionX = XMLBoutons.attr('positionX') || positionX;
-                    positionY = XMLBoutons.attr('positionY') || positionY;
-                    dX = XMLBoutons.attr('dX') || dX;
-                    dY = XMLBoutons.attr('dY') || dY;
-                    /**
-                     * Initialisation de l'interface
-                     */
-                    init(fenPanoramique);
-                    /**
-                     * Initialisation de l'affichage du panoramique
-                     */
-                    switch (panoType)
-                    {
-                        case "cube":
-                            initPanoCube();
-                            break;
-                        case "sphere":
-                            initPanoSphere();
-                            break;
-                    }
-                });
+        chargeXML(xmlFile);
     };
 }
 

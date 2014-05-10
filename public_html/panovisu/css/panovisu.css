@@ -174,4 +174,12 @@ and open the template in the editor.
 .pano-visu{
     overflow: hidden;
 }
+.infoBulle{
+    display: none;
+    border: 1px solid #777;
+    background-color: #ddd;
+    font-family: titillium,Verdana,sans-serif;
+    font-size: 0.6em;
+    padding: 2px 7px;
+}
 

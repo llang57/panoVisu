@@ -15,6 +15,8 @@ and open the template in the editor.
         afficherTitre="non"
     />
     <boutons 
+        couleur="#aaaaaa"
+        bordure="#333"
         deplacements="oui" 
         zoom="oui" 
         outils="oui"
@@ -27,4 +29,12 @@ and open the template in the editor.
         dY="10"
         visible="oui"
     />
+    <point
+        long="0"
+        lat="0"
+        xml="xml/piscine.xml"
+        image="panovisu/images/sprite2.png"
+        info="Roubaix - La piscine"
+        
+        />
 </scene>

@@ -14,6 +14,8 @@ and open the template in the editor.
         affInfo="non"
     />
     <boutons 
+        couleur="orange"
+        bordure="red"
         deplacements="oui" 
         zoom="non" 
         outils="oui"
@@ -26,4 +28,18 @@ and open the template in the editor.
         dY="10"
         visible="oui"
     />
+    <point
+        long="180"
+        lat="-10"
+        xml="xml/beauport.xml"
+        image="panovisu/images/sprite3.png"
+        info="Abbaye Maritime de Beauport"
+        />
+    <point
+        long="95"
+        lat="-5"
+        xml="xml/panovisu.xml"
+        image="panovisu/images/sprite3.png"
+        info="images de test"
+        />
 </scene>

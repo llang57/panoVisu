@@ -15,6 +15,7 @@ and open the template in the editor.
         afficherTitre="non"
     />
     <boutons 
+        styleBoutons="classique"        
         couleur="#aaaaaa"
         bordure="#333"
         deplacements="oui" 
@@ -35,6 +36,5 @@ and open the template in the editor.
         xml="xml/piscine.xml"
         image="panovisu/images/sprite2.png"
         info="Roubaix - La piscine"
-        
         />
 </scene>

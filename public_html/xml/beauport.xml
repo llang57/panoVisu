@@ -7,15 +7,18 @@ and open the template in the editor.
 
 
 <scene>
+    <!--Définition de la vue-->
     <pano 
         image="panos/BeauportCellier" 
         titre="Abbaye Maritime de Beauport - le Cellier" 
         type="cube"
         affInfo="non"        
     />
+    <!--Définition de la Barre de navigation-->
     <boutons 
-        couleur="green"
-        bordure="black"
+        styleBoutons="classique"        
+        couleur="rgba(255,255,255,0.5)"
+        bordure="rgba(255,255,255,0)"
         deplacements="non" 
         zoom="oui" 
         outils="oui"
@@ -28,19 +31,22 @@ and open the template in the editor.
         dY="10"
         visible="oui"
     />
+    <!--Définition des hotspots-->    
     <point
         long="180"
         lat="-10"
         xml="xml/pontCouvert.xml"
         image="panovisu/images/sprite3.png"
         info="Strasbourg - les ponts couverts"
-        />
+        anime="true"
+    />
     <point
         long="95"
         lat="5"
         xml="xml/piscine.xml"
         image="panovisu/images/sprite3.png"
         info="Roubaix - La piscine C'est beau éè non ????"
-        />
+        anime="true"
+    />
     
 </scene>

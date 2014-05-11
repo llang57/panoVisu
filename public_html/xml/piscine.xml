@@ -14,6 +14,7 @@ and open the template in the editor.
         affInfo="non"
     />
     <boutons 
+        styleBoutons="classique"
         couleur="orange"
         bordure="red"
         deplacements="oui" 
@@ -34,6 +35,7 @@ and open the template in the editor.
         xml="xml/beauport.xml"
         image="panovisu/images/sprite3.png"
         info="Abbaye Maritime de Beauport"
+        anime="true"        
         />
     <point
         long="95"
@@ -41,5 +43,6 @@ and open the template in the editor.
         xml="xml/panovisu.xml"
         image="panovisu/images/sprite3.png"
         info="images de test"
+        anime="false"
         />
 </scene>

@@ -23,8 +23,9 @@ function panovisu(num_pano) {
         this.id = 0;
         this.image = "";
         this.texte = "";
-        this.long=0;
-        this.lat=0;
+        this.long = 0;
+        this.lat = 0;
+        this.posY = 0;
     }
 
     function pointInteret() {
@@ -32,11 +33,15 @@ function panovisu(num_pano) {
         this.lat = 0;
         this.xml = "";
         this.image = "";
+        this.anime = "false";
         this.info = "";
     }
 
     var timer,
+            timers,
             i,
+            affHS = 0,
+            deltaHS = 0.02,
             numHS,
             numHotspot = 0,
             mouseMove,
@@ -81,6 +86,7 @@ function panovisu(num_pano) {
      */
     var panoImage,
             couleur,
+            styleBoutons,
             bordure,
             panoTitre,
             panoType,
@@ -127,11 +133,8 @@ function panovisu(num_pano) {
             mouse.y = -(Y / $(this).height()) * 2 + 1;
             var vector = new THREE.Vector3(mouse.x, mouse.y, 1);
             projector.unprojectVector(vector, camera);
-            //alert(projector.x + "," + projector.y + "," + projector.z);
             raycaster.set(camera.position, vector.sub(camera.position).normalize());
-
             var intersects = raycaster.intersectObjects(scene.children);
-            //alert(intersects.length);
             if (intersects.length > 0) {
                 var intersect = intersects[ 0 ];
                 var object = intersect.object;
@@ -212,12 +215,8 @@ function panovisu(num_pano) {
             mouse.y = -(Y / $(this).height()) * 2 + 1;
             var vector = new THREE.Vector3(mouse.x, mouse.y, 1);
             projector.unprojectVector(vector, camera);
-            //alert(projector.x + "," + projector.y + "," + projector.z);
-
             raycaster.set(camera.position, vector.sub(camera.position).normalize());
-
             var intersects = raycaster.intersectObjects(scene.children);
-            //alert(intersects.length);
             if (intersects.length > 0) {
                 pano.css({cursor: "pointer"});
                 var intersect = intersects[ 0 ];
@@ -635,9 +634,9 @@ function panovisu(num_pano) {
     }
 
     function chargeNouveauPano(nHotspot) {
+        clearInterval(timers);
         $("#infoBulle-" + num_pano).hide();
         $("#infoBulle-" + num_pano).html("");
-//        alert("n° Hotspot : " + nHotspot);
         isReloaded = true;
         xmlFile = pointsInteret[nHotspot].xml;
         hotSpot = new Array();
@@ -779,6 +778,10 @@ function panovisu(num_pano) {
                 var pi = pointsInteret[i];
                 creeHotspot(pi.long, pi.lat, pi.xml, pi.image);
             }
+            timers = setInterval(function() {
+                rafraichitHS();
+            }, 50);
+
             affiche();
             pano1.fadeIn(2000, function() {
                 afficheBarre(pano.width(), pano.height());
@@ -856,9 +859,6 @@ function panovisu(num_pano) {
         mesh = new THREE.Mesh(new THREE.CubeGeometry(300, 300, 300, 10, 10, 10), new THREE.MeshFaceMaterial(materials));
         mesh.scale.x = -1;
         scene.add(mesh);
-
-        //alert("ici");
-
         renderer.setSize(pano.width(), pano.height());
         container.append(renderer.domElement);
         setTimeout(function() {
@@ -868,6 +868,9 @@ function panovisu(num_pano) {
                 creeHotspot(pi.long, pi.lat, pi.xml, pi.image);
             }
             affiche();
+            timers = setInterval(function() {
+                rafraichitHS();
+            }, 50);
             $("#info-" + num_pano).fadeIn(2000);
             pano1.fadeIn(2000, function() {
                 affiche();
@@ -950,39 +953,52 @@ function panovisu(num_pano) {
     function creeBarreNavigation() {
         $("<button>", {type: "button", id: "xmoins-" + num_pano, class: "xmoins", title: "déplacement à gauche",
             style: "background-color : " + couleur + ";border : 1px solid " + bordure + ";"}).appendTo("#deplacement-" + num_pano);
-        $("<img>", {src: "panovisu/images/gauche.png", alt: ""}).appendTo("#xmoins-" + num_pano);
         $("<button>", {type: "button", id: "ymoins-" + num_pano, class: "ymoins", title: "déplacement vers le haut",
             style: "background-color : " + couleur + ";border : 1px solid " + bordure + ";"}).appendTo("#deplacement-" + num_pano);
-        $("<img>", {src: "panovisu/images/haut.png", alt: ""}).appendTo("#ymoins-" + num_pano);
         $("<button>", {type: "button", id: "yplus-" + num_pano, class: "yplus", title: "déplacement vers le bas",
             style: "background-color : " + couleur + ";border : 1px solid " + bordure + ";"}).appendTo("#deplacement-" + num_pano);
-        $("<img>", {src: "panovisu/images/bas.png", alt: ""}).appendTo("#yplus-" + num_pano);
         $("<button>", {type: "button", id: "xplus-" + num_pano, class: "xplus", title: "déplacement à droite",
             style: "background-color : " + couleur + ";border : 1px solid " + bordure + ";"}).appendTo("#deplacement-" + num_pano);
-        $("<img>", {src: "panovisu/images/droite.png", alt: ""}).appendTo("#xplus-" + num_pano);
         $("<button>", {type: "button", id: "zoomPlus-" + num_pano, class: "zoomPlus", title: "zoom +",
             style: "background-color : " + couleur + ";border : 1px solid " + bordure + ";"}).appendTo("#zoom-" + num_pano);
-        $("<img>", {src: "panovisu/images/zoomin.png", alt: ""}).appendTo("#zoomPlus-" + num_pano);
         $("<button>", {type: "button", id: "zoomMoins-" + num_pano, class: "zoomMoins", title: "zoom -",
             style: "background-color : " + couleur + ";border : 1px solid " + bordure + ";"}).appendTo("#zoom-" + num_pano);
-        $("<img>", {src: "panovisu/images/zoomout.png", alt: ""}).appendTo("#zoomMoins-" + num_pano);
         $("<button>", {type: "button", id: "pleinEcran-" + num_pano, class: "pleinEcran", title: "plein ecran",
             style: "background-color : " + couleur + ";border : 1px solid " + bordure + ";"}).appendTo("#outils-" + num_pano);
-        $("<img>", {src: "panovisu/images/fs.png", alt: ""}).appendTo("#pleinEcran-" + num_pano);
         $("<button>", {type: "button", id: "souris-" + num_pano, class: "souris", title: "change le mode de déplacement de la souris",
             style: "background-color : " + couleur + ";border : 1px solid " + bordure + ";"}).appendTo("#outils-" + num_pano);
-        $("<img>", {src: "panovisu/images/souris.png", alt: ""}).appendTo("#souris-" + num_pano);
         $("<button>", {type: "button", id: "auto-" + num_pano, class: "auto", title: "autorotation (M/A)",
             style: "background-color : " + couleur + ";border : 1px solid " + bordure + ";"}).appendTo("#outils-" + num_pano);
-        $("<img>", {src: "panovisu/images/rotation.png", alt: ""}).appendTo("#auto-" + num_pano);
         $("<button>", {type: "button", id: "binfo-" + num_pano, class: "binfo", title: "A propos ...",
             style: "background-color : " + couleur + ";border : 1px solid " + bordure + ";"}).appendTo("#outils-" + num_pano);
-        $("<img>", {src: "panovisu/images/info.png", alt: ""}).appendTo("#binfo-" + num_pano);
         $("<button>", {type: "button", id: "aide-" + num_pano, class: "aide", title: "Aide",
             style: "background-color : " + couleur + ";border : 1px solid " + bordure + ";"}).appendTo("#outils-" + num_pano);
-        $("<img>", {src: "panovisu/images/aide.png", alt: ""}).appendTo("#aide-" + num_pano);
-
     }
+    function creeImagesboutons(){
+        $("#xmoins-" + num_pano).html("");
+        $("<img>", {src: "panovisu/images/"+styleBoutons+"/gauche.png", alt: ""}).appendTo("#xmoins-" + num_pano);
+        $("#ymoins-" + num_pano).html("");
+        $("<img>", {src: "panovisu/images/"+styleBoutons+"/haut.png", alt: ""}).appendTo("#ymoins-" + num_pano);
+        $("#yplus-" + num_pano).html("");
+        $("<img>", {src: "panovisu/images/"+styleBoutons+"/bas.png", alt: ""}).appendTo("#yplus-" + num_pano);
+        $("#xplus-" + num_pano).html("");
+        $("<img>", {src: "panovisu/images/"+styleBoutons+"/droite.png", alt: ""}).appendTo("#xplus-" + num_pano);
+        $("#zoomPlus-" + num_pano).html("");
+        $("<img>", {src: "panovisu/images/"+styleBoutons+"/zoomin.png", alt: ""}).appendTo("#zoomPlus-" + num_pano);
+        $("#zoomMoins-" + num_pano).html("");
+        $("<img>", {src: "panovisu/images/"+styleBoutons+"/zoomout.png", alt: ""}).appendTo("#zoomMoins-" + num_pano);
+        $("#pleinEcran-" + num_pano).html("");
+        $("<img>", {src: "panovisu/images/"+styleBoutons+"/fs.png", alt: ""}).appendTo("#pleinEcran-" + num_pano);
+        $("#souris-" + num_pano).html("");
+        $("<img>", {src: "panovisu/images/"+styleBoutons+"/souris.png", alt: ""}).appendTo("#souris-" + num_pano);
+        $("#auto-" + num_pano).html("");
+        $("<img>", {src: "panovisu/images/"+styleBoutons+"/rotation.png", alt: ""}).appendTo("#auto-" + num_pano);
+        $("#binfo-" + num_pano).html("");
+        $("<img>", {src: "panovisu/images/"+styleBoutons+"/info.png", alt: ""}).appendTo("#binfo-" + num_pano);
+        $("#aide-" + num_pano).html("");
+        $("<img>", {src: "panovisu/images/"+styleBoutons+"/aide.png", alt: ""}).appendTo("#aide-" + num_pano);
+    }
+    
     /**
      * 
      * @param {type} fenetrePanoramique
@@ -1034,16 +1050,33 @@ function panovisu(num_pano) {
         hotSpot[numHotspot].id = sprite.id;
         hotSpot[numHotspot].image = xml;
         hotSpot[numHotspot].texte = "";
-//        alert("ajout hotspot id= "+hotSpot[numHotspot].id+" xml : " + xml + " n°" + numHotspot);
-
-        numHotspot += 1;
-
         radius = 10;
         sprite.position.set(vect.x, vect.y, vect.z);
         sprite.position.normalize();
         sprite.position.multiplyScalar(radius);
+        hotSpot[numHotspot].posY = sprite.position.y;
         scene.add(sprite);
         affiche();
+        numHotspot += 1;
+    }
+
+    function rafraichitHS() {
+        for (var i = 0, l = scene.children.length; i < l; i++) {
+            var object = scene.children[ i ];
+            for (var j = 0; j < hotSpot.length; j++)
+            {
+                if (object.id === hotSpot[j].id) {
+                    if (pointsInteret[j].anime === "true")
+                    {
+                        affHS += deltaHS;
+                        if ((affHS > 0.25) || (affHS < -0.25))
+                            deltaHS = -deltaHS;
+                        object.position.y = hotSpot[j].posY + affHS;
+                        renderer.render(scene, camera);
+                    }
+                }
+            }
+        }
     }
 
     function chargeXML(xmlFile) {
@@ -1051,6 +1084,7 @@ function panovisu(num_pano) {
                 function(d) {
                     panoImage = "faces";
                     couleur = "#ffffff";
+                    styleBoutons="classique";
                     bordure = "#777";
                     panoTitre = "";
                     panoType = "cube";
@@ -1096,6 +1130,7 @@ function panovisu(num_pano) {
                      */
                     var XMLBoutons = $(d).find('boutons');
                     deplacements = XMLBoutons.attr('deplacements') || deplacements;
+                    styleBoutons=XMLBoutons.attr('styleBoutons') ||styleBoutons;
                     zooms = XMLBoutons.attr('zoom') || zooms;
                     outils = XMLBoutons.attr('outils') || outils;
                     fs = XMLBoutons.attr('fs') || fs;
@@ -1111,7 +1146,6 @@ function panovisu(num_pano) {
                         backgroundColor: couleur,
                         border: "1px solid " + bordure
                     });
-                    //alert(couleur);
                     dX = XMLBoutons.attr('dX') || dX;
                     dY = XMLBoutons.attr('dY') || dY;
                     i = 0;
@@ -1121,14 +1155,15 @@ function panovisu(num_pano) {
                         pointsInteret[i].info = $(this).attr('info') || "";
                         pointsInteret[i].image = $(this).attr('image') || "panovisu/images/sprite2.png";
                         pointsInteret[i].long = $(this).attr('long') || 0;
+                        pointsInteret[i].anime = $(this).attr('anime') || "false";
                         pointsInteret[i].lat = $(this).attr('lat') || 0;
-//                        alert("i : "+i+" ==>"+pointsInteret[i].xml+" ("+pointsInteret[i].image+") : "+pointsInteret[i].long+","+pointsInteret[i].lat);
                         i++;
                     });
                     /**
                      * Initialisation de l'interface
                      */
                     init(fenPanoramique);
+                    creeImagesboutons();
                     /**
                      * Initialisation de l'affichage du panoramique
                      */
@@ -1260,4 +1295,3 @@ $("head").append(
 if (!supportWebgl() && !supportCanvas()) {
     alert("Navigateur non supporté");
 }
-

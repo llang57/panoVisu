@@ -122,6 +122,9 @@ function panovisu(num_pano) {
     });
 
     $(document).on("click", "#container-" + num_pano, function(evenement) {
+        /*
+         * Evite de déclencher un hotspot si on arrête la souris dessus
+         */
         if (mouseMove === false) {
             var mouse = new THREE.Vector2();
             var projector = new THREE.Projector();
@@ -509,7 +512,6 @@ function panovisu(num_pano) {
      * 
      * @returns {undefined}
      */
-
     function affiche() {
         if (latitude > 89.99)
             latitude = 89.99;
@@ -523,8 +525,6 @@ function panovisu(num_pano) {
         camera.lookAt(target);
         renderer.render(scene, camera);
     }
-
-    //this.affiche=affiche();
 
     /**
      * 
@@ -594,6 +594,11 @@ function panovisu(num_pano) {
         }, 200);
     }
 
+    /**
+     * 
+     * @param {type} divObj
+     * @returns {undefined}
+     */
     function passeEnPleinEcran(divObj) {
         if (divObj.requestFullscreen) {
             divObj.requestFullscreen();
@@ -610,8 +615,10 @@ function panovisu(num_pano) {
         inFullScreen = true;
         return;
     }
-
-    //  reset full screen across several browsers
+    /**
+     * 
+     * @returns {undefined}
+     */
     function sortPleinEcran() {
         if (document.exitFullscreen) {
             document.exitFullscreen();
@@ -632,7 +639,11 @@ function panovisu(num_pano) {
         return;
 
     }
-
+    /**
+     * 
+     * @param {type} nHotspot
+     * @returns {undefined}
+     */
     function chargeNouveauPano(nHotspot) {
         clearInterval(timers);
         $("#infoBulle-" + num_pano).hide();
@@ -649,7 +660,6 @@ function panovisu(num_pano) {
      * 
      * @returns {undefined}
      */
-
     function pleinEcran() {
         element = document.getElementById("panovisu-" + num_pano);
         if (bPleinEcran) {
@@ -668,7 +678,10 @@ function panovisu(num_pano) {
         }, 200);
     }
 
-
+    /**
+     * 
+     * @returns {undefined}
+     */
     function afficheInfo() {
         posGauche = (pano.width() - $("#infoPanovisu-" + num_pano).width()) / 2;
         posHaut = (pano.height() - $("#infoPanovisu-" + num_pano).height()) / 2;
@@ -678,7 +691,10 @@ function panovisu(num_pano) {
             $("#infoPanovisu-" + num_pano).css({display: "block"});
         }
     }
-
+    /**
+     * 
+     * @returns {undefined}
+     */
     function afficheAide() {
         posGauche = (pano.width() - $("#aidePanovisu-" + num_pano).width()) / 2;
         posHaut = (pano.height() - $("#aidePanovisu-" + num_pano).height()) / 2;
@@ -688,7 +704,10 @@ function panovisu(num_pano) {
             $("#aidePanovisu-" + num_pano).css({display: "block"});
         }
     }
-
+    /**
+     * 
+     * @returns {undefined}
+     */
     function afficheErreur() {
         panoInfo = "<b>Panovisu version " +
                 version +
@@ -974,31 +993,35 @@ function panovisu(num_pano) {
         $("<button>", {type: "button", id: "aide-" + num_pano, class: "aide", title: "Aide",
             style: "background-color : " + couleur + ";border : 1px solid " + bordure + ";"}).appendTo("#outils-" + num_pano);
     }
-    function creeImagesboutons(){
+    /**
+     * 
+     * @returns {undefined}
+     */
+    function creeImagesboutons() {
         $("#xmoins-" + num_pano).html("");
-        $("<img>", {src: "panovisu/images/"+styleBoutons+"/gauche.png", alt: ""}).appendTo("#xmoins-" + num_pano);
+        $("<img>", {src: "panovisu/images/" + styleBoutons + "/gauche.png", alt: ""}).appendTo("#xmoins-" + num_pano);
         $("#ymoins-" + num_pano).html("");
-        $("<img>", {src: "panovisu/images/"+styleBoutons+"/haut.png", alt: ""}).appendTo("#ymoins-" + num_pano);
+        $("<img>", {src: "panovisu/images/" + styleBoutons + "/haut.png", alt: ""}).appendTo("#ymoins-" + num_pano);
         $("#yplus-" + num_pano).html("");
-        $("<img>", {src: "panovisu/images/"+styleBoutons+"/bas.png", alt: ""}).appendTo("#yplus-" + num_pano);
+        $("<img>", {src: "panovisu/images/" + styleBoutons + "/bas.png", alt: ""}).appendTo("#yplus-" + num_pano);
         $("#xplus-" + num_pano).html("");
-        $("<img>", {src: "panovisu/images/"+styleBoutons+"/droite.png", alt: ""}).appendTo("#xplus-" + num_pano);
+        $("<img>", {src: "panovisu/images/" + styleBoutons + "/droite.png", alt: ""}).appendTo("#xplus-" + num_pano);
         $("#zoomPlus-" + num_pano).html("");
-        $("<img>", {src: "panovisu/images/"+styleBoutons+"/zoomin.png", alt: ""}).appendTo("#zoomPlus-" + num_pano);
+        $("<img>", {src: "panovisu/images/" + styleBoutons + "/zoomin.png", alt: ""}).appendTo("#zoomPlus-" + num_pano);
         $("#zoomMoins-" + num_pano).html("");
-        $("<img>", {src: "panovisu/images/"+styleBoutons+"/zoomout.png", alt: ""}).appendTo("#zoomMoins-" + num_pano);
+        $("<img>", {src: "panovisu/images/" + styleBoutons + "/zoomout.png", alt: ""}).appendTo("#zoomMoins-" + num_pano);
         $("#pleinEcran-" + num_pano).html("");
-        $("<img>", {src: "panovisu/images/"+styleBoutons+"/fs.png", alt: ""}).appendTo("#pleinEcran-" + num_pano);
+        $("<img>", {src: "panovisu/images/" + styleBoutons + "/fs.png", alt: ""}).appendTo("#pleinEcran-" + num_pano);
         $("#souris-" + num_pano).html("");
-        $("<img>", {src: "panovisu/images/"+styleBoutons+"/souris.png", alt: ""}).appendTo("#souris-" + num_pano);
+        $("<img>", {src: "panovisu/images/" + styleBoutons + "/souris.png", alt: ""}).appendTo("#souris-" + num_pano);
         $("#auto-" + num_pano).html("");
-        $("<img>", {src: "panovisu/images/"+styleBoutons+"/rotation.png", alt: ""}).appendTo("#auto-" + num_pano);
+        $("<img>", {src: "panovisu/images/" + styleBoutons + "/rotation.png", alt: ""}).appendTo("#auto-" + num_pano);
         $("#binfo-" + num_pano).html("");
-        $("<img>", {src: "panovisu/images/"+styleBoutons+"/info.png", alt: ""}).appendTo("#binfo-" + num_pano);
+        $("<img>", {src: "panovisu/images/" + styleBoutons + "/info.png", alt: ""}).appendTo("#binfo-" + num_pano);
         $("#aide-" + num_pano).html("");
-        $("<img>", {src: "panovisu/images/"+styleBoutons+"/aide.png", alt: ""}).appendTo("#aide-" + num_pano);
+        $("<img>", {src: "panovisu/images/" + styleBoutons + "/aide.png", alt: ""}).appendTo("#aide-" + num_pano);
     }
-    
+
     /**
      * 
      * @param {type} fenetrePanoramique
@@ -1032,8 +1055,8 @@ function panovisu(num_pano) {
      * 
      * @param {type} long
      * @param {type} lat
-     * @param {type} imgPano
-     * @param {type} texte
+     * @param {type} xml
+     * @param {type} img
      * @returns {undefined}
      */
     function creeHotspot(long, lat, xml, img) {
@@ -1059,7 +1082,10 @@ function panovisu(num_pano) {
         affiche();
         numHotspot += 1;
     }
-
+    /**
+     * 
+     * @returns {undefined}
+     */
     function rafraichitHS() {
         for (var i = 0, l = scene.children.length; i < l; i++) {
             var object = scene.children[ i ];
@@ -1078,13 +1104,17 @@ function panovisu(num_pano) {
             }
         }
     }
-
+    /**
+     * 
+     * @param {type} xmlFile
+     * @returns {undefined}
+     */
     function chargeXML(xmlFile) {
         $.get(xmlFile,
                 function(d) {
                     panoImage = "faces";
                     couleur = "#ffffff";
-                    styleBoutons="classique";
+                    styleBoutons = "classique";
                     bordure = "#777";
                     panoTitre = "";
                     panoType = "cube";
@@ -1130,7 +1160,7 @@ function panovisu(num_pano) {
                      */
                     var XMLBoutons = $(d).find('boutons');
                     deplacements = XMLBoutons.attr('deplacements') || deplacements;
-                    styleBoutons=XMLBoutons.attr('styleBoutons') ||styleBoutons;
+                    styleBoutons = XMLBoutons.attr('styleBoutons') || styleBoutons;
                     zooms = XMLBoutons.attr('zoom') || zooms;
                     outils = XMLBoutons.attr('outils') || outils;
                     fs = XMLBoutons.attr('fs') || fs;

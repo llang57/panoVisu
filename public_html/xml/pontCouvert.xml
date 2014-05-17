@@ -15,9 +15,9 @@ and open the template in the editor.
         afficheInfo="non"
     />
     <boutons 
-        styleBoutons="classique"        
-        couleur="cyan"
-        bordure="blue"        
+        styleBoutons="classiquevert"        
+        couleur="rgba(255,255,255,0)"
+        bordure="rgba(255,255,255,0)"        
         deplacements="oui" 
         zoom="non" 
         outils="oui"
@@ -34,7 +34,7 @@ and open the template in the editor.
         long="180"
         lat="-10"
         xml="xml/beauport.xml"
-        image="panovisu/images/sprite2.png"
+        image="panovisu/images/hotspots/croixverte.png"
         info="Abbaye Maritime de Beauport"    
         animate="false"            
     />
@@ -42,7 +42,7 @@ and open the template in the editor.
         long="95"
         lat="5"
         xml="xml/piscine.xml"
-        image="panovisu/images/sprite2.png"
+        image="panovisu/images/hotspots/croixverte.png"
         info="Roubaix - La piscine"        
         animate="false"
     />

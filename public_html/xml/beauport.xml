@@ -16,8 +16,8 @@ and open the template in the editor.
     />
     <!--Définition de la Barre de navigation-->
     <boutons 
-        styleBoutons="classique"        
-        couleur="rgba(255,255,255,0.5)"
+        styleBoutons="classiquerouge"        
+        couleur="rgba(255,255,255,0)"
         bordure="rgba(255,255,255,0)"
         deplacements="non" 
         zoom="oui" 
@@ -36,7 +36,7 @@ and open the template in the editor.
         long="180"
         lat="-10"
         xml="xml/pontCouvert.xml"
-        image="panovisu/images/sprite3.png"
+        image="panovisu/images/hotspots/hotspotrouge.png"
         info="Strasbourg - les ponts couverts"
         anime="true"
     />
@@ -44,7 +44,7 @@ and open the template in the editor.
         long="95"
         lat="5"
         xml="xml/piscine.xml"
-        image="panovisu/images/sprite3.png"
+        image="panovisu/images/hotspots/hotspotrouge.png"
         info="Roubaix - La piscine C'est beau éè non ????"
         anime="true"
     />

@@ -15,9 +15,9 @@ and open the template in the editor.
         afficheInfo="non"
     />
     <boutons 
-        styleBoutons="classique"        
-        couleur="#888888"
-        bordure="black"        
+        styleBoutons="autreplaneterouge"        
+        couleur="#aa8888"
+        bordure="red"        
         deplacements="oui" 
         zoom="non" 
         outils="oui"

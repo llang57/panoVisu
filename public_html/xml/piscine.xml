@@ -14,9 +14,9 @@ and open the template in the editor.
         affInfo="non"
     />
     <boutons 
-        styleBoutons="classique"
-        couleur="orange"
-        bordure="red"
+        styleBoutons="retinavert"
+        couleur="rgba(255,255,255,0)"
+        bordure="rgba(255,255,255,0)"
         deplacements="oui" 
         zoom="non" 
         outils="oui"
@@ -33,7 +33,7 @@ and open the template in the editor.
         long="180"
         lat="-10"
         xml="xml/beauport.xml"
-        image="panovisu/images/sprite3.png"
+        image="panovisu/images/hotspots/hotspotvert.png"
         info="Abbaye Maritime de Beauport"
         anime="true"        
         />
@@ -41,7 +41,7 @@ and open the template in the editor.
         long="95"
         lat="-5"
         xml="xml/panovisu.xml"
-        image="panovisu/images/sprite3.png"
+        image="panovisu/images/hotspots/hotspotvert.png"
         info="images de test"
         anime="false"
         />

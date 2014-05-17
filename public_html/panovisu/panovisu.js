@@ -550,15 +550,15 @@ function panovisu(num_pano) {
     function afficheBarre(larg1, haut1) {
         if (pano.width() < 400 || pano.height() < 200)
         {
-            $("#barre-" + num_pano + " button").css({height: "15px", width: "15px", borderRadius: "0px"});
-            $("#barre-" + num_pano + " button img").css({height: "10px", width: "10px", paddingBottom: "2px", marginLeft: "-2px"});
-            $("#barre-" + num_pano).css({height: "15px"});
+            $("#barre-" + num_pano + " button").css({height: "20px", width: "20px", borderRadius: "0px"});
+            $("#barre-" + num_pano + " button img").css({height: "18px", width: "18px", paddingBottom: "2px", marginLeft: "-2px"});
+            $("#barre-" + num_pano).css({height: "25px"});
         }
         else
         {
             $("#barre-" + num_pano + " button").css({height: "30px", width: "30px", borderRadius: "3px"});
-            $("#barre-" + num_pano + " button img").css({height: "20px", width: "20px", paddingBottom: "0px", marginLeft: "0px"});
-            $("#barre-" + num_pano).css({height: "30px"});
+            $("#barre-" + num_pano + " button img").css({height: "26px", width: "26px", paddingBottom: "0px", marginLeft: "0px"});
+            $("#barre-" + num_pano).css({height: "40px"});
         }
         setTimeout(function() {
             w1 = $("#barre-" + num_pano).width();

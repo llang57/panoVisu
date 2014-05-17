@@ -500,7 +500,7 @@ function panovisu(num_pano) {
         });
     });
 
-    $(document).on("click", ".infoPanovisu a", function() {
+    $(document).on("click", ".infoPanovisu a", function(event) {
         event.stopPropagation();
     });
 
@@ -1120,9 +1120,9 @@ function panovisu(num_pano) {
         $.get(xmlFile,
                 function(d) {
                     panoImage = "faces";
-                    couleur = "#ffffff";
+                    couleur = "none";
                     styleBoutons = "classique";
-                    bordure = "#777";
+                    bordure = "none";
                     panoTitre = "";
                     panoType = "cube";
                     affInfo = "oui";

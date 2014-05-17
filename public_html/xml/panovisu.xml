@@ -15,11 +15,11 @@ and open the template in the editor.
         afficherTitre="non"
     />
     <boutons 
-        styleBoutons="classiquevert"        
-        couleur="rgba(0,0,0,0)"
-        bordure="rgba(0,0,0,0)"
+        styleBoutons="retinavert"
+        couleur="none"
+        bordure="none"
         deplacements="oui" 
-        zoom="oui" 
+        zoom="non" 
         outils="oui"
         fs="oui" 
         souris="oui" 
@@ -30,11 +30,13 @@ and open the template in the editor.
         dY="10"
         visible="oui"
     />
-    <point
-        long="0"
-        lat="0"
-        xml="xml/piscine.xml"
-        image="panovisu/images/hotspots/croixverte.png"
-        info="Roubaix - La piscine"
+    <hotspots>
+        <point
+            long="0"
+            lat="0"
+            xml="xml/piscine.xml"
+            image="panovisu/images/hotspots/hotspotvert.png"
+            info="Roubaix - La piscine"
         />
+    </hotspots>
 </scene>

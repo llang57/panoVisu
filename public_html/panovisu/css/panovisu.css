@@ -114,8 +114,8 @@ and open the template in the editor.
 .barre button{
     height: 40px;
     width: 40px;
-    border: 1px solid #777;
-    background-color: #fff;
+    border: 1px solid rgba(255,255,255,0);
+    background-color: rgba(255,255,255,0);
     border-radius: 3px;
     opacity: 0.8;
     margin-right: 3px;

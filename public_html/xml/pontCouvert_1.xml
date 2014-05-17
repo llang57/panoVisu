@@ -16,7 +16,7 @@ and open the template in the editor.
     />
     <boutons 
         styleBoutons="autreplaneterouge"        
-        couleur="#aa8888"
+        couleur="pink"
         bordure="red"        
         deplacements="oui" 
         zoom="non" 

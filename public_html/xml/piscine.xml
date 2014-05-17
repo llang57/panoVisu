@@ -15,8 +15,8 @@ and open the template in the editor.
     />
     <boutons 
         styleBoutons="retinavert"
-        couleur="rgba(255,255,255,0)"
-        bordure="rgba(255,255,255,0)"
+        couleur="none"
+        bordure="none"
         deplacements="oui" 
         zoom="non" 
         outils="oui"
@@ -29,20 +29,22 @@ and open the template in the editor.
         dY="10"
         visible="oui"
     />
-    <point
-        long="180"
-        lat="-10"
-        xml="xml/beauport.xml"
-        image="panovisu/images/hotspots/hotspotvert.png"
-        info="Abbaye Maritime de Beauport"
-        anime="true"        
+    <hotspots>
+        <point
+            long="180"
+            lat="-10"
+            xml="xml/beauport.xml"
+            image="panovisu/images/hotspots/hotspotvert.png"
+            info="Abbaye Maritime de Beauport"
+            anime="true"        
         />
-    <point
-        long="95"
-        lat="-5"
-        xml="xml/panovisu.xml"
-        image="panovisu/images/hotspots/hotspotvert.png"
-        info="images de test"
-        anime="false"
+        <point
+            long="95"
+            lat="-5"
+            xml="xml/panovisu.xml"
+            image="panovisu/images/hotspots/hotspotvert.png"
+            info="images de test"
+            anime="false"
         />
+    </hotspots>
 </scene>

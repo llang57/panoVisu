@@ -11,6 +11,12 @@
  * 
  * @returns {window|String}
  */
+version = "0.20";
+programmeur = "Laurent LANG";
+anneeProgramme="2014";
+site="http://lemondea360.fr";
+siteTexte="le monde à 360°";
+
 function estTactile() {
     return !!('ontouchstart' in window);
 }
@@ -52,7 +58,6 @@ function panovisu(num_pano) {
             longitude = 0,
             latitude = 0,
             fenPanoramique,
-            version = "0.15",
             texture_placeholder,
             isUserInteracting = false,
             onPointerDownPointerX = 0,
@@ -1033,8 +1038,10 @@ function panovisu(num_pano) {
                 version +
                 "</b><br><br>Un visualiseur 100% HTML5 - 100% libre<br>" +
                 "Utilise la bibliothèque <a href='http://threejs.org/' target='_blank' title='voir la page de three.js'>Three.js</a>" +
-                "<br><br>&copy; Laurent LANG (2014)<br><div id='panovisuCharge-" + num_pano + "'>&nbsp;</div>cliquez pour fermer la fenêtre";
-        $("#infoPanovisu-" + num_pano).css({width: "450px", height: "150px"});
+                "<br><br>&copy; "+programmeur+" ("+anneeProgramme+")<br>"+
+                "<br>une création : <a href='"+site+"' target='_blank'>"+siteTexte+"</a><br>"+
+                "<div id='panovisuCharge-" + num_pano + "'>&nbsp;</div>cliquez pour fermer la fenêtre";
+        $("#infoPanovisu-" + num_pano).css({width: "450px", height: "190px"});
         $("#infoPanovisu-" + num_pano).html(panoInfo);
     }
     /**

@@ -1080,7 +1080,7 @@ function panovisu(num_pano) {
         hotSpot[numHotspot].id = sprite.id;
         hotSpot[numHotspot].image = xml;
         hotSpot[numHotspot].texte = "";
-        radius = 10;
+        radius = 20;
         sprite.position.set(vect.x, vect.y, vect.z);
         sprite.position.normalize();
         sprite.position.multiplyScalar(radius);

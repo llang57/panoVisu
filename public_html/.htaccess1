@@ -1,0 +1,4 @@
+Options +FollowSymlinks
+RewriteEngine on
+#RewriteRule ^([_a-zA-Z0-9\-]*)$  /lemondea360/panovisu/index.html?xml=xml/$1 [L,R=301]
+RewriteRule ^([_a-zA-Z0-9\-]*)$  /panovisu-canvas-three/public_html/index.html?xml=xml/$1 [L,QSA]

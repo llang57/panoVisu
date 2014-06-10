@@ -10,6 +10,12 @@ and open the template in the editor.
     <pano 
         image="panos/piscine" 
         titre="La piscine Roubaix - Le bassin" 
+        titrePolice="Arial"
+        titreTaillePolice="16pt"
+        titreTaille="100%"
+        titreCouleur="black"
+        titreFond="green"
+        titreOpacite="0.7"
         type="cube"
         affInfo="non"
     />

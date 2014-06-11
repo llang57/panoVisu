@@ -1199,8 +1199,8 @@ function panovisu(num_pano) {
                     titreOpacite = XMLPano.attr('titreOpacite') || titreOpacite;
                     panoType = XMLPano.attr('type') || panoType;
                     autoRotation = XMLPano.attr('rotation') || autoRotation;
-                    longitude = XMLPano.attr('regardX') || longitude;
-                    latitude = XMLPano.attr('regardY') || latitude;
+                    longitude = parseFloat(XMLPano.attr('regardX')) || longitude;
+                    latitude = parseFloat(XMLPano.attr('regardY')) || latitude;
                     fov = XMLPano.attr('champVision') || fov;
                     afficheTitre = XMLPano.attr('afficheTitre') || afficheTitre;
                     affInfo = XMLPano.attr('afficheInfo') || affInfo;

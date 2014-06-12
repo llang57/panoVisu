@@ -18,6 +18,7 @@ and open the template in the editor.
         titreOpacite="0.7"
         type="cube"
         affInfo="non"
+        zeroNord="90"
     />
     <boutons 
         styleBoutons="retinavert"
@@ -34,6 +35,17 @@ and open the template in the editor.
         dX="0" 
         dY="10"
         visible="oui"
+    />
+    <boussole 
+        affiche="oui"
+        image="rose3.png"
+        taille="120"
+        positionY="bottom"
+        positionX="right"
+        opacite="0.5"
+        dX="10"
+        dy="10"
+        aiguille="oui"
     />
     <hotspots>
         <point

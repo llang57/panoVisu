@@ -182,7 +182,7 @@ and open the template in the editor.
 }
 .bousAig,.bousImg{
     position: absolute;
-    z-index: 501;
+    z-index: 502;
     transform-origin: 50% 50%;
 }
 .boussole{

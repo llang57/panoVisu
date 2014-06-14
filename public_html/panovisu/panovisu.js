@@ -1,7 +1,7 @@
 /**
  * @name panoVisu
  * 
- * @version 1.0
+ * @version 0.50
  * @author LANG Laurent
  */
 
@@ -11,7 +11,7 @@
  * 
  * @returns {window|String}
  */
-version = "0.30";
+version = "0.50";
 programmeur = "Laurent LANG";
 anneeProgramme = "2014";
 site = "http://lemondea360.fr";
@@ -135,7 +135,20 @@ function panovisu(num_pano) {
             boussoleDY,
             boussoleAffiche,
             boussoleOpacite,
-            boussoleAiguille;
+            boussoleAiguille,
+            elementsVisibles,
+            marcheArret,
+            marcheArretAffiche,
+            marcheArretImage,
+            marcheArretPositionX,
+            marcheArretPositionY,
+            marcheArretDX,
+            marcheArretDY,
+            marcheArretTitre,
+            marcheArretNavigation,
+            marcheArretBoussole,
+            marcheArretTaille,
+            marcheArretPlan;
 
     /**
      * Evènements souris / Touche sur écran
@@ -525,6 +538,32 @@ function panovisu(num_pano) {
         event.stopPropagation();
     });
 
+    $(document).on("click", ".marcheArret", function() {
+        if (elementsVisibles) {
+            if (marcheArretNavigation === "oui")
+                $("#barre-" + num_pano).fadeOut(500);
+            if (marcheArretBoussole === "oui")
+                $("#boussole-" + num_pano).fadeOut(500);
+            if (marcheArretTitre === "oui")
+                $("#info-" + num_pano).fadeOut(500);
+            if (marcheArretPlan === "oui")
+                $("#plan-" + num_pano).fadeOut(500);
+            elementsVisibles = false;
+        }
+        else {
+            if (marcheArretNavigation === "oui")
+                $("#barre-" + num_pano).fadeIn(500);
+            if (marcheArretBoussole === "oui")
+                $("#boussole-" + num_pano).fadeIn(500);
+            if (marcheArretTitre === "oui")
+                $("#info-" + num_pano).fadeIn(500);
+            if (marcheArretPlan === "oui")
+                $("#plan-" + num_pano).fadeIn(500);
+            elementsVisibles = true;
+        }
+    });
+
+
     /**
      * 
      * @returns {undefined}
@@ -693,6 +732,7 @@ function panovisu(num_pano) {
         pointsInteret = new Array();
         numHotspot = 0;
         $("#boussole-" + num_pano).hide();
+        $("#marcheArret-" + num_pano).hide();
         chargeXML(xmlFile);
     }
 
@@ -795,7 +835,26 @@ function panovisu(num_pano) {
             });
             $("#boussole-" + num_pano).show();
         }
+        if (marcheArret) {
+            console.log("test  : " + marcheArretPositionX + " : " + marcheArretDX + "px");
+            $("#marcheArret-" + num_pano).css(marcheArretPositionX, marcheArretDX + "px");
+            $("#marcheArret-" + num_pano).css(marcheArretPositionY, marcheArretDY + "px");
+            $("#marcheArret-" + num_pano).css({
+                width: marcheArretTaille + "px",
+                height: marcheArretTaille + "px"
+            });
+            $("#MAImg-" + num_pano).attr("src", "panovisu/images/hotspots/MA/" + marcheArretImage);
+            $("#MAImg-" + num_pano).css({
+                width: marcheArretTaille + "px",
+                height: marcheArretTaille + "px",
+                top: "0px",
+                left: "0px"
+            });
+            $("#marcheArret-" + num_pano).show();
+            elementsVisibles = true;
 
+
+        }
         $("#info-" + num_pano).html(panoTitre);
 
         (boutons === "oui") ? $("#boutons-" + num_pano).show() : $("#boutons-" + num_pano).hide();
@@ -1252,6 +1311,18 @@ function panovisu(num_pano) {
                     boussoleAffiche = "non";
                     boussoleOpacite = 0.75;
                     boussoleAiguille = "non";
+                    marcheArret = false;
+                    marcheArretAffiche = "non";
+                    marcheArretImage = "MAVert.png";
+                    marcheArretPositionX = "left";
+                    marcheArretPositionY = "bottom";
+                    marcheArretDX = 10;
+                    marcheArretDY = 10;
+                    marcheArretTaille = 30;
+                    marcheArretNavigation = "non";
+                    marcheArretTitre = "non";
+                    marcheArretBoussole = "non";
+                    marcheArretPlan = "non";
                     /**
                      * Définition du panoramique à afficher 
                      */
@@ -1295,6 +1366,24 @@ function panovisu(num_pano) {
                     boussoleDY = XMLBoussole.attr('dY') || boussoleDY;
                     boussoleOpacite = parseFloat(XMLBoussole.attr('opacite')) || boussoleOpacite;
                     boussoleAiguille = XMLBoussole.attr('aiguille') || boussoleAiguille;
+                    /*
+                     * Bouton de masquage
+                     * 
+                     */
+                    var XMLMarcheArret = $(d).find('marcheArret');
+                    marcheArretAffiche = XMLMarcheArret.attr('affiche') || marcheArretAffiche;
+                    marcheArret = (marcheArretAffiche === "oui");
+                    marcheArretImage = XMLMarcheArret.attr('image') || marcheArretImage;
+                    marcheArretPositionX = XMLMarcheArret.attr('positionX') || marcheArretPositionX;
+                    marcheArretPositionY = XMLMarcheArret.attr('positionY') || marcheArretPositionY;
+                    marcheArretDX = parseFloat(XMLMarcheArret.attr('dX')) || marcheArretDX;
+                    marcheArretDY = parseFloat(XMLMarcheArret.attr('dY')) || marcheArretDY;
+                    marcheArretTaille = parseFloat(XMLMarcheArret.attr('taille')) || marcheArretTaille;
+                    marcheArretNavigation = XMLMarcheArret.attr('navigation') || marcheArretNavigation;
+                    marcheArretBoussole = XMLMarcheArret.attr('boussole') || marcheArretBoussole;
+                    marcheArretTitre = XMLMarcheArret.attr('titre') || marcheArretTitre;
+                    marcheArretPlan = XMLMarcheArret.attr('plan') || marcheArretPlan;
+
                     //alert(boussoleImage);
                     /**
                      * Défintion pour la barre des boutons
@@ -1378,6 +1467,9 @@ function panovisu(num_pano) {
         $("<img>", {id: "bousImg-" + num_pano, class: "bousImg", src: ""}).appendTo("#boussole-" + num_pano);
         $("<img>", {id: "bousAig-" + num_pano, class: "bousAig", src: "panovisu/images/boussoles/aiguille.png"}).appendTo("#boussole-" + num_pano);
         $("#boussole-" + num_pano).hide();
+        $("<div>", {id: "marcheArret-" + num_pano, class: "marcheArret"}).appendTo("#" + fenetrePanoramique);
+        $("<img>", {id: "MAImg-" + num_pano, class: "MAImg", src: ""}).appendTo("#marcheArret-" + num_pano);
+        $("#marcheArret-" + num_pano).hide();
         $("<div>", {id: "info-" + num_pano, class: "info"}).appendTo("#" + fenetrePanoramique);
         $("<div>", {id: "infoBulle-" + num_pano, class: "infoBulle", style: "display:none;position: absolute;"}).appendTo("#" + fenetrePanoramique);
         $("#infoBulle-" + num_pano).html("infoBulle");

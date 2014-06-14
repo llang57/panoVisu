@@ -10,10 +10,10 @@ and open the template in the editor.
     <pano 
         image="panos/piscine" 
         titre="La piscine Roubaix - Le bassin" 
-        titrePolice="Arial"
+        titrePolice="Segoe Print"
         titreTaillePolice="16pt"
         titreTaille="100%"
-        titreCouleur="black"
+        titreCouleur="yellow"
         titreFond="green"
         titreOpacite="0.7"
         type="cube"
@@ -47,6 +47,19 @@ and open the template in the editor.
         dy="10"
         aiguille="oui"
     />
+    <marcheArret
+        affiche="oui"
+        image="MAVert2.png"
+        navigation="oui"
+        titre="oui"
+        boussole="oui"
+        plan="oui"
+        positionX="right"
+        positionY="top"
+        taille="30"
+        dX="10"
+        dY="10"    
+    />            
     <hotspots>
         <point
             long="180"

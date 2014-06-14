@@ -140,6 +140,7 @@ function panovisu(num_pano) {
             marcheArret,
             marcheArretAffiche,
             marcheArretImage,
+            marcheArretOpacite,
             marcheArretPositionX,
             marcheArretPositionY,
             marcheArretDX,
@@ -147,8 +148,22 @@ function panovisu(num_pano) {
             marcheArretTitre,
             marcheArretNavigation,
             marcheArretBoussole,
+            marcheArretPlan,
+            marcheArretReseaux,
             marcheArretTaille,
-            marcheArretPlan;
+            reseauxSociaux,
+            reseauxSociauxAffiche,
+            reseauxSociauxOpacite,
+            reseauxSociauxPositionX,
+            reseauxSociauxPositionY,
+            reseauxSociauxDX,
+            reseauxSociauxDY,
+            reseauxSociauxTaille,
+            reseauxSociauxTwitter,
+            reseauxSociauxFacebook,
+            reseauxSociauxGoogle,
+            reseauxSociauxEmail;
+            
 
     /**
      * Evènements souris / Touche sur écran
@@ -548,6 +563,8 @@ function panovisu(num_pano) {
                 $("#info-" + num_pano).fadeOut(500);
             if (marcheArretPlan === "oui")
                 $("#plan-" + num_pano).fadeOut(500);
+            if (marcheArretReseaux==="oui")
+                $("#reseauxSociaux-" + num_pano).fadeOut(500);
             elementsVisibles = false;
         }
         else {
@@ -559,6 +576,8 @@ function panovisu(num_pano) {
                 $("#info-" + num_pano).fadeIn(500);
             if (marcheArretPlan === "oui")
                 $("#plan-" + num_pano).fadeIn(500);
+            if (marcheArretReseaux==="oui")
+                $("#reseauxSociaux-" + num_pano).fadeIn(500);
             elementsVisibles = true;
         }
     });
@@ -843,6 +862,8 @@ function panovisu(num_pano) {
                 width: marcheArretTaille + "px",
                 height: marcheArretTaille + "px"
             });
+            $("#marcheArret-" + num_pano).css("opacity", marcheArretOpacite);
+
             $("#MAImg-" + num_pano).attr("src", "panovisu/images/hotspots/MA/" + marcheArretImage);
             $("#MAImg-" + num_pano).css({
                 width: marcheArretTaille + "px",
@@ -855,6 +876,32 @@ function panovisu(num_pano) {
 
 
         }
+        if (reseauxSociaux) {
+            $("#reseauxSociaux-" + num_pano).css(reseauxSociauxPositionX, reseauxSociauxDX + "px");
+            $("#reseauxSociaux-" + num_pano).css(reseauxSociauxPositionY, reseauxSociauxDY + "px");
+            $("#reseauxSociaux-" + num_pano).css({
+                width: (reseauxSociauxTaille+5)*4 + "px",
+                height: reseauxSociauxTaille + "px"
+            });
+            $("#reseauxSociaux-" + num_pano).css("opacity", reseauxSociauxOpacite);
+
+            $("#RSTW-" + num_pano).attr("src", "panovisu/images/hotspots/reseaux/twitter.png");
+            $("#RSGO-" + num_pano).attr("src", "panovisu/images/hotspots/reseaux/google.png");
+            $("#RSFB-" + num_pano).attr("src", "panovisu/images/hotspots/reseaux/facebook.png");
+            $("#RSEM-" + num_pano).attr("src", "panovisu/images/hotspots/reseaux/email.png");
+            $("#RSTW-" + num_pano+", #RSGO-" + num_pano+", #RSFB-" + num_pano+", #RSEM-" + num_pano).css({
+                width: reseauxSociauxTaille + "px",
+                height: reseauxSociauxTaille + "px",
+                top: "0px",
+            });
+            if (reseauxSociauxTwitter==="non")$("#RSTW-" + num_pano).hide(0);
+            if (reseauxSociauxGoogle==="non")$("#RSGO-" + num_pano).hide(0);
+            if (reseauxSociauxFacebook==="non")$("#RSFB-" + num_pano).hide(0);
+            if (reseauxSociauxEmail==="non")$("#RSEM-" + num_pano).hide(0);
+            $("#reseauxSociaux-" + num_pano).show();
+            elementsVisibles = true;
+        }
+        
         $("#info-" + num_pano).html(panoTitre);
 
         (boutons === "oui") ? $("#boutons-" + num_pano).show() : $("#boutons-" + num_pano).hide();
@@ -1313,6 +1360,7 @@ function panovisu(num_pano) {
                     boussoleAiguille = "non";
                     marcheArret = false;
                     marcheArretAffiche = "non";
+                    marcheArretOpacite = 0.8;
                     marcheArretImage = "MAVert.png";
                     marcheArretPositionX = "left";
                     marcheArretPositionY = "bottom";
@@ -1323,6 +1371,19 @@ function panovisu(num_pano) {
                     marcheArretTitre = "non";
                     marcheArretBoussole = "non";
                     marcheArretPlan = "non";
+                    marcheArretReseaux = "non";
+                    reseauxSociaux = false;
+                    reseauxSociauxAffiche = "non";
+                    reseauxSociauxOpacite = 0.8;
+                    reseauxSociauxPositionX = "left";
+                    reseauxSociauxPositionY = "bottom";
+                    reseauxSociauxDX = 10;
+                    reseauxSociauxDY = 10;
+                    reseauxSociauxTaille = 30;
+                    reseauxSociauxTwitter = "non";
+                    reseauxSociauxFacebook = "non";
+                    reseauxSociauxGoogle = "non";
+                    reseauxSociauxEmail = "non";
                     /**
                      * Définition du panoramique à afficher 
                      */
@@ -1367,13 +1428,32 @@ function panovisu(num_pano) {
                     boussoleOpacite = parseFloat(XMLBoussole.attr('opacite')) || boussoleOpacite;
                     boussoleAiguille = XMLBoussole.attr('aiguille') || boussoleAiguille;
                     /*
+                     * Reseaux Sociaux
+                     * 
+                     */
+                    var XMLReseauxSociaux = $(d).find('reseauxSociaux');
+                    reseauxSociauxAffiche = XMLReseauxSociaux.attr('affiche') || reseauxSociauxAffiche;
+                    reseauxSociaux = (reseauxSociauxAffiche === "oui");
+                    reseauxSociauxOpacite = parseFloat(XMLReseauxSociaux.attr('opacite')) || reseauxSociauxOpacite;
+                    reseauxSociauxPositionX = XMLReseauxSociaux.attr('positionX') || reseauxSociauxPositionX;
+                    reseauxSociauxPositionY = XMLReseauxSociaux.attr('positionY') || reseauxSociauxPositionY;
+                    reseauxSociauxDX = parseFloat(XMLReseauxSociaux.attr('dX')) || reseauxSociauxDX;
+                    reseauxSociauxDY = parseFloat(XMLReseauxSociaux.attr('dY')) || reseauxSociauxDY;
+                    reseauxSociauxTaille = parseFloat(XMLReseauxSociaux.attr('taille')) || reseauxSociauxTaille;
+                    reseauxSociauxTwitter = XMLReseauxSociaux.attr('twitter') || reseauxSociauxTwitter;
+                    reseauxSociauxFacebook = XMLReseauxSociaux.attr('facebook') || reseauxSociauxFacebook;
+                    reseauxSociauxGoogle = XMLReseauxSociaux.attr('google') || reseauxSociauxGoogle;
+                    reseauxSociauxEmail = XMLReseauxSociaux.attr('email') || reseauxSociauxEmail;
+                    /*
                      * Bouton de masquage
                      * 
                      */
+                    
                     var XMLMarcheArret = $(d).find('marcheArret');
                     marcheArretAffiche = XMLMarcheArret.attr('affiche') || marcheArretAffiche;
                     marcheArret = (marcheArretAffiche === "oui");
                     marcheArretImage = XMLMarcheArret.attr('image') || marcheArretImage;
+                    marcheArretOpacite = parseFloat(XMLMarcheArret.attr('opacite')) || marcheArretOpacite;
                     marcheArretPositionX = XMLMarcheArret.attr('positionX') || marcheArretPositionX;
                     marcheArretPositionY = XMLMarcheArret.attr('positionY') || marcheArretPositionY;
                     marcheArretDX = parseFloat(XMLMarcheArret.attr('dX')) || marcheArretDX;
@@ -1383,6 +1463,7 @@ function panovisu(num_pano) {
                     marcheArretBoussole = XMLMarcheArret.attr('boussole') || marcheArretBoussole;
                     marcheArretTitre = XMLMarcheArret.attr('titre') || marcheArretTitre;
                     marcheArretPlan = XMLMarcheArret.attr('plan') || marcheArretPlan;
+                    marcheArretReseaux = XMLMarcheArret.attr('reseaux') || marcheArretReseaux;
 
                     //alert(boussoleImage);
                     /**
@@ -1468,8 +1549,15 @@ function panovisu(num_pano) {
         $("<img>", {id: "bousAig-" + num_pano, class: "bousAig", src: "panovisu/images/boussoles/aiguille.png"}).appendTo("#boussole-" + num_pano);
         $("#boussole-" + num_pano).hide();
         $("<div>", {id: "marcheArret-" + num_pano, class: "marcheArret"}).appendTo("#" + fenetrePanoramique);
-        $("<img>", {id: "MAImg-" + num_pano, class: "MAImg", src: ""}).appendTo("#marcheArret-" + num_pano);
+        $("<img>", {id: "MAImg-" + num_pano, class: "MAImg", src: "", title: "Affiche/Masque les éléments"}).appendTo("#marcheArret-" + num_pano);
         $("#marcheArret-" + num_pano).hide();
+        $("<div>", {id: "reseauxSociaux-" + num_pano, class: "reseauxSociaux"}).appendTo("#" + fenetrePanoramique);
+        $("<img>", {id: "RSTW-" + num_pano, class: "RS reseauSocial-twitter", src: "", title: "twitter"}).appendTo("#reseauxSociaux-" + num_pano);
+        $("<img>", {id: "RSGO-" + num_pano, class: "RS reseauSocial-google", src: "", title: "google"}).appendTo("#reseauxSociaux-" + num_pano);
+        $("<img>", {id: "RSFB-" + num_pano, class: "RS reseauSocial-fb", src: "", title: "facebook"}).appendTo("#reseauxSociaux-" + num_pano);
+        $("<a>",{id :"lienEmail"+num_pano,class: "RS reseauSocial-email",href:""}).appendTo("#reseauxSociaux-" + num_pano);
+        $("<img>", {id: "RSEM-" + num_pano,  src: "", title: "email"}).appendTo("#lienEmail"+num_pano);
+        $("#reseauxSociaux-" + num_pano).hide();
         $("<div>", {id: "info-" + num_pano, class: "info"}).appendTo("#" + fenetrePanoramique);
         $("<div>", {id: "infoBulle-" + num_pano, class: "infoBulle", style: "display:none;position: absolute;"}).appendTo("#" + fenetrePanoramique);
         $("#infoBulle-" + num_pano).html("infoBulle");

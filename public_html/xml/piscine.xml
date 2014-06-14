@@ -47,6 +47,19 @@ and open the template in the editor.
         dy="10"
         aiguille="oui"
     />
+    <reseauxSociaux 
+        affiche="oui"
+        facebook="oui"
+        google="oui"
+        twitter="oui"
+        email="oui"
+        positionX="left"
+        positionY="top"
+        taille="30"
+        dX="10"
+        dY="10"   
+        opacite="0.8" 
+    />
     <marcheArret
         affiche="oui"
         image="MAVert2.png"
@@ -54,11 +67,13 @@ and open the template in the editor.
         titre="oui"
         boussole="oui"
         plan="oui"
+        reseaux="oui"
         positionX="right"
         positionY="top"
         taille="30"
         dX="10"
         dY="10"    
+        opacite="0.8" 
     />            
     <hotspots>
         <point

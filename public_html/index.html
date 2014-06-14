@@ -77,8 +77,35 @@
                         fenY: "30%",
                         xml: "xml/pontCouvert_1.xml"
                     });
+                    $(".reseauSocial-twitter").on("click", function() {
+                        alert(document.location.href);
+                        window.open(
+                                "https://twitter.com/share?url=" + document.location.href
+                                );
+                        return false;
+                    });
+                    $(".reseauSocial-fb").on("click", function() {
+                        window.open(
+                                "http://www.facebook.com/share.php?u=" + document.location.href
+                                );
+                        return false;
+                    });
+                    $(".reseauSocial-google").on("click", function() {
+                        window.open(
+                                "https://plus.google.com/share?url=" + document.location.href + "&amp;hl=fr"
+                                );
+                        return false;
+                    });
+                    $(".reseauSocial-email").attr("href","mailto:?body=" + document.location.href + "&amp;hl=fr");
                 });
             </script>
+            <div  >
+                <img class="reseauSocial-twitter" src="tweet.png" alt="tweet"/>
+                <img class="reseauSocial-fb" src="like.png" alt="like"/>
+                <img class="reseauSocial-google" src="plusone.png" alt="plusone"/>
+                <a href="" class="reseauSocial-email"><img src="email.png" alt="email"/></a>
+            </div>
+
         </div>
         <footer>
             Page de test - Panovisu

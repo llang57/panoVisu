@@ -189,6 +189,15 @@ and open the template in the editor.
     position: absolute;
     z-index: 501;
 }
+.reseauxSociaux {
+    position: absolute;
+    z-index: 502;
+}
+.RS{
+    padding-right: 5px;
+    cursor: pointer;
+}
+
 .marcheArret{
     position: absolute;
     z-index: 501;

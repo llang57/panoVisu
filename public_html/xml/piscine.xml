@@ -33,18 +33,18 @@ and open the template in the editor.
         positionX="center"
         positionY="bottom" 
         dX="0" 
-        dY="10"
+        dY="70"
         visible="oui"
     />
     <boussole 
         affiche="oui"
         image="rose3.png"
-        taille="120"
+        taille="60"
         positionY="bottom"
         positionX="right"
         opacite="0.5"
         dX="10"
-        dy="10"
+        dY="70"
         aiguille="oui"
     />
     <reseauxSociaux 
@@ -74,7 +74,43 @@ and open the template in the editor.
         dX="10"
         dY="10"    
         opacite="0.8" 
-    />            
+    />     
+    <vignettes 
+        affiche="oui"
+        tailleImage="120"
+        fondCouleur="green"
+        opacite="0.8"
+        position="bottom"
+    >
+        <imageVignette 
+            image="panos/piscine1_sphereVignette.jpg"
+            xml="xml/beauport.xml"
+        />
+        <imageVignette 
+            image="panos/piscine2_sphereVignette.jpg"
+            xml="xml/pontCouvert.xml"
+        />
+        <imageVignette 
+            image="panos/piscine3_sphereVignette.jpg"
+            xml="xml/pontCouvert_1.xml"
+        />
+        <imageVignette 
+            image="panos/piscine4_sphereVignette.jpg"
+            xml="xml/panovisu.xml"
+        />
+        <imageVignette 
+            image="panos/piscine5_sphereVignette.jpg"
+            xml="xml/pontCouvert_1.xml"
+        />
+        <imageVignette 
+            image="panos/piscine6_sphereVignette.jpg"
+            xml="xml/pontCouvert.xml"
+        />
+        <imageVignette 
+            image="panos/piscine7_sphereVignette.jpg"
+            xml="xml/beauport.xml"
+        />
+    </vignettes>       
     <hotspots>
         <point
             long="180"

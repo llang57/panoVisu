@@ -43,6 +43,13 @@ function panovisu(num_pano) {
         this.info = "";
     }
 
+    function vignettePano() {
+        this.image = "";
+        this.xml = "";
+        this.txt = "";
+    }
+
+
     var timer,
             timers,
             i,
@@ -54,6 +61,7 @@ function panovisu(num_pano) {
             isReloaded = false,
             hotSpot = new Array(),
             pointsInteret = new Array(),
+            vignettesPano = new Array(),
             mode = 1,
             longitude = 0,
             latitude = 0,
@@ -85,7 +93,8 @@ function panovisu(num_pano) {
             fenetreUniteX,
             fenetreUniteY,
             marginPanoLeft,
-            nbPanoCharges = 0;
+            nbPanoCharges = 0,
+            positionVignettesX = 0;
     /**
      * Variables par défaut pour l'affichage du panoramique
      * 
@@ -162,8 +171,15 @@ function panovisu(num_pano) {
             reseauxSociauxTwitter,
             reseauxSociauxFacebook,
             reseauxSociauxGoogle,
-            reseauxSociauxEmail;
-            
+            reseauxSociauxEmail,
+            vignettesAffiche,
+            vignettes,
+            vignettesOpacite,
+            vignettesPosition,
+            vignettesFondCouleur,
+            vignettesTaille,
+            vignettesTailleImage;
+
 
     /**
      * Evènements souris / Touche sur écran
@@ -553,7 +569,70 @@ function panovisu(num_pano) {
         event.stopPropagation();
     });
 
-    $(document).on("click", ".marcheArret", function() {
+    $(document).on("click", ".imgVignette", function(evenement) {
+        if (vignettesPano.length !== 0) {
+            console.log(vignettesPano);
+            var element = $(this).attr("id");
+            var numelement = parseInt(element.substring(6).split("-")[0]);
+            console.log("Numéro" + (numelement + 1));
+            clearInterval(timers);
+            longitude = 0;
+            latitude = 0;
+            fov = 75;
+            $("#infoBulle-" + num_pano).hide();
+            $("#infoBulle-" + num_pano).html("");
+            isReloaded = true;
+            xmlFile = vignettesPano[numelement].xml;
+            hotSpot = new Array();
+            pointsInteret = new Array();
+            vignettesPano = new Array();
+            numHotspot = 0;
+            $("#boussole-" + num_pano).hide();
+            $("#marcheArret-" + num_pano).hide();
+            $("#divVignettes-" + num_pano).html("");
+            $("#divVignettes-" + num_pano).hide();
+            chargeXML(xmlFile);
+        }
+
+    });
+
+
+    $(document).on("click", ".positionVignettes", function(evenement) {
+        if (vignettesTailleImage) {
+            evenement.stopPropagation();
+            element = $(this).attr("id");
+            console.log(vignettesTailleImage + " " + elementsVisibles + "=>" + element);
+            deplace = vignettesTailleImage + 10;
+            if (element === "gaucheVignettes-" + num_pano) {
+                positionVignettesX += deplace;
+            }
+            else {
+                positionVignettesX -= deplace;
+            }
+            if (positionVignettesX > 0)
+                positionVignettesX = 0;
+            if (-positionVignettesX + $("#divVignettes-" + num_pano).width() > (vignettesTailleImage + 10) * vignettesPano.length)
+                positionVignettesX = $("#divVignettes-" + num_pano).width() - (vignettesTailleImage + 10) * vignettesPano.length;
+            console.log("calcule " + positionVignettesX);
+            if (bAfficheInfo)
+            {
+                $("#infoPanovisu-" + num_pano).fadeOut(2000, function() {
+                    $(this).css({display: "none"});
+                    bAfficheInfo = false;
+                });
+
+            }
+
+            $("#vignettes-" + num_pano).css({
+                transform: "translate(" + positionVignettesX + "px,0px)"
+            })
+        }
+    });
+
+
+    $(document).on("click", ".marcheArret", function(evenement) {
+        evenement.stopPropagation();
+        console.log(vignettesTailleImage + " " + elementsVisibles);
         if (elementsVisibles) {
             if (marcheArretNavigation === "oui")
                 $("#barre-" + num_pano).fadeOut(500);
@@ -563,7 +642,7 @@ function panovisu(num_pano) {
                 $("#info-" + num_pano).fadeOut(500);
             if (marcheArretPlan === "oui")
                 $("#plan-" + num_pano).fadeOut(500);
-            if (marcheArretReseaux==="oui")
+            if (marcheArretReseaux === "oui")
                 $("#reseauxSociaux-" + num_pano).fadeOut(500);
             elementsVisibles = false;
         }
@@ -576,7 +655,7 @@ function panovisu(num_pano) {
                 $("#info-" + num_pano).fadeIn(500);
             if (marcheArretPlan === "oui")
                 $("#plan-" + num_pano).fadeIn(500);
-            if (marcheArretReseaux==="oui")
+            if (marcheArretReseaux === "oui")
                 $("#reseauxSociaux-" + num_pano).fadeIn(500);
             elementsVisibles = true;
         }
@@ -592,6 +671,67 @@ function panovisu(num_pano) {
         latitude += deltaY;
         affiche();
     }
+
+
+    function afficheVignettesHorizontales() {
+        $("<div>", {id: "vignettes-" + num_pano, class: "vignettes"}).appendTo("#divVignettes-" + num_pano);
+        var hauteur = vignettesTailleImage / 2;
+        var largeurFenetre = $("#pano1-" + num_pano).width() - 15;
+        if (largeurFenetre < (vignettesTailleImage + 10) * vignettesPano.length) {
+            $("#gaucheVignettes-" + num_pano).show(500);
+            $("#gaucheVignettes-" + num_pano).css({
+                left: 0,
+                height: vignettesTailleImage / 2 + 6,
+                width: 15,
+                bottom: 0
+            });
+
+            $("#droiteVignettes-" + num_pano).show(500);
+            $("#droiteVignettes-" + num_pano).css({
+                right: "0px",
+                height: vignettesTailleImage / 2 + 6,
+                width: 15,
+                bottom: 0
+            });
+        }
+        $("#divVignettes-" + num_pano).css(vignettesPosition, "0px");
+        $("#divVignettes-" + num_pano).css({
+            height: hauteur,
+            width: largeurFenetre,
+            paddingLeft: "17px",
+            paddingTop: "3px",
+            paddingBottom: "3px",
+            backgroundColor: vignettesFondCouleur,
+            opacity: vignettesOpacite,
+            overflow: "hidden"
+        });
+
+        console.log($("#pano1-" + num_pano).width() + ";" + $("#pano1-" + num_pano).height());
+        $("#vignettes-" + num_pano).css({
+            height: hauteur,
+            width: 3000
+        });
+        $("#divVignettes-" + num_pano).css(vignettesPosition, "0px");
+        for (var i = 0; i < vignettesPano.length; i++) {
+            if (vignettesPano[i].txt !== "") {
+                texte = vignettesPano[i].txt;
+            }
+            else {
+                texte = vignettesPano[i].xml;
+            }
+
+            $("<img>", {
+                id: "imgVig" + i + "-" + num_pano,
+                class: "imgVignette",
+                src: vignettesPano[i].image,
+                title: vignettesPano[i].txt,
+                width: vignettesTailleImage,
+                height: vignettesTailleImage / 2
+            }).appendTo("#vignettes-" + num_pano);
+        }
+        $("#divVignettes-" + num_pano).show();
+    }
+
     /**
      * 
      * @returns {undefined}
@@ -706,7 +846,7 @@ function panovisu(num_pano) {
         else if (divObj.webkitRequestFullscreen) {
             divObj.webkitRequestFullscreen();
         }
-        inFullScreen = true;
+        bPleinEcran = true;
         return;
     }
     /**
@@ -729,7 +869,7 @@ function panovisu(num_pano) {
         else if (document.webkitCancelFullScreen) {
             document.webkitCancelFullScreen();
         }
-        inFullScreen = false;
+        bPleinEcran = false;
         return;
 
     }
@@ -760,21 +900,55 @@ function panovisu(num_pano) {
      * @returns {undefined}
      */
     function pleinEcran() {
-        element = document.getElementById("panovisu-" + num_pano);
-        if (bPleinEcran) {
-            sortPleinEcran();
+        if (vignettesPano.length > 0)
+        {
+            element = document.getElementById("panovisu-" + num_pano);
+            var largeurFenetre;
+            if (bPleinEcran) {
+                sortPleinEcran();
+            }
+            else {
+                passeEnPleinEcran(element);
+            }
+            camera.aspect = pano.width() / pano.height();
+            camera.updateProjectionMatrix();
+            renderer.setSize(pano.width(), pano.height());
+            affiche();
+            setTimeout(function() {
+                afficheInfo();
+                afficheAide();
+                afficheBarre(pano.width(), pano.height());
+                afficheInfoTitre();
+                var largeurFenetre;
+                if (bPleinEcran) {
+                    largeurFenetre = $("#pano1-" + num_pano).width();
+                }
+                else {
+                    largeurFenetre = $("#pano1-" + num_pano).width() - 15;
+                }
+                console.log("taille :" + largeurFenetre);
+                $("#divVignettes-" + num_pano).css({
+                    width: largeurFenetre
+                });
+                $("#vignettes-" + num_pano).css({
+                    transform: "translate(0px,0px)"
+                })
+                var tailleImages = ((vignettesTailleImage + 10) * vignettesPano.length);
+                console.log(vignettesPano + "tailleImages " + tailleImages + " > " + largeurFenetre + " < " + vignettesTailleImage);
+                if (largeurFenetre < tailleImages) {
+                    console.log("plus petit");
+                    $("#gaucheVignettes-" + num_pano).show();
+                    $("#droiteVignettes-" + num_pano).show();
+                }
+                else
+                {
+                    console.log("plus grand");
+                    $("#gaucheVignettes-" + num_pano).hide();
+                    $("#droiteVignettes-" + num_pano).hide();
+                }
+
+            }, 300);
         }
-        else {
-            passeEnPleinEcran(element);
-        }
-        camera.aspect = pano.width() / pano.height();
-        camera.updateProjectionMatrix();
-        renderer.setSize(pano.width(), pano.height());
-        affiche();
-        setTimeout(function() {
-            afficheInfo();
-            afficheBarre(pano.width(), pano.height());
-        }, 200);
     }
 
     /**
@@ -880,7 +1054,7 @@ function panovisu(num_pano) {
             $("#reseauxSociaux-" + num_pano).css(reseauxSociauxPositionX, reseauxSociauxDX + "px");
             $("#reseauxSociaux-" + num_pano).css(reseauxSociauxPositionY, reseauxSociauxDY + "px");
             $("#reseauxSociaux-" + num_pano).css({
-                width: (reseauxSociauxTaille+5)*4 + "px",
+                width: (reseauxSociauxTaille + 5) * 4 + "px",
                 height: reseauxSociauxTaille + "px"
             });
             $("#reseauxSociaux-" + num_pano).css("opacity", reseauxSociauxOpacite);
@@ -889,19 +1063,23 @@ function panovisu(num_pano) {
             $("#RSGO-" + num_pano).attr("src", "panovisu/images/hotspots/reseaux/google.png");
             $("#RSFB-" + num_pano).attr("src", "panovisu/images/hotspots/reseaux/facebook.png");
             $("#RSEM-" + num_pano).attr("src", "panovisu/images/hotspots/reseaux/email.png");
-            $("#RSTW-" + num_pano+", #RSGO-" + num_pano+", #RSFB-" + num_pano+", #RSEM-" + num_pano).css({
+            $("#RSTW-" + num_pano + ", #RSGO-" + num_pano + ", #RSFB-" + num_pano + ", #RSEM-" + num_pano).css({
                 width: reseauxSociauxTaille + "px",
                 height: reseauxSociauxTaille + "px",
                 top: "0px",
             });
-            if (reseauxSociauxTwitter==="non")$("#RSTW-" + num_pano).hide(0);
-            if (reseauxSociauxGoogle==="non")$("#RSGO-" + num_pano).hide(0);
-            if (reseauxSociauxFacebook==="non")$("#RSFB-" + num_pano).hide(0);
-            if (reseauxSociauxEmail==="non")$("#RSEM-" + num_pano).hide(0);
+            if (reseauxSociauxTwitter === "non")
+                $("#RSTW-" + num_pano).hide(0);
+            if (reseauxSociauxGoogle === "non")
+                $("#RSGO-" + num_pano).hide(0);
+            if (reseauxSociauxFacebook === "non")
+                $("#RSFB-" + num_pano).hide(0);
+            if (reseauxSociauxEmail === "non")
+                $("#RSEM-" + num_pano).hide(0);
             $("#reseauxSociaux-" + num_pano).show();
             elementsVisibles = true;
         }
-        
+
         $("#info-" + num_pano).html(panoTitre);
 
         (boutons === "oui") ? $("#boutons-" + num_pano).show() : $("#boutons-" + num_pano).hide();
@@ -935,6 +1113,17 @@ function panovisu(num_pano) {
         afficheBarre(pano.width(), pano.height());
         afficheInfo();
         afficheAide();
+        if (vignettes) {
+            if (vignettesPosition === "bottom") {
+                afficheVignettesHorizontales();
+            }
+            else
+            {
+                afficheVignettesVerticales();
+
+            }
+        }
+
     }
     /**
      * Initialisation du panoramique / équilatéral
@@ -1107,43 +1296,71 @@ function panovisu(num_pano) {
      * @returns {undefined}
      */
     function changeTaille() {
+        if (vignettesPano.length > 0) {
+            if (!bPleinEcran) {
 
-        if (!bPleinEcran) {
 
+                if (fenetreUniteX === "%") {
+                    largeur = Math.round(fenetreX * $("#" + fenPanoramique).parent().width());
+                }
+                else {
+                    largeur = fenetreX;
+                }
+                if (fenetreUniteY === "%") {
+                    hauteur = Math.round(fenetreY * $("#" + fenPanoramique).parent().height());
+                }
+                else {
+                    hauteur = fenetreY;
+                }
 
-            if (fenetreUniteX === "%") {
-                largeur = Math.round(fenetreX * $("#" + fenPanoramique).parent().width());
+                $("#" + fenPanoramique).css({
+                    width: largeur + "px",
+                    height: hauteur + "px"
+                });
+                pano.css({
+                    width: largeur + "px",
+                    height: hauteur + "px"
+                });
             }
-            else {
-                largeur = fenetreX;
-            }
-            if (fenetreUniteY === "%") {
-                hauteur = Math.round(fenetreY * $("#" + fenPanoramique).parent().height());
-            }
-            else {
-                hauteur = fenetreY;
-            }
+            camera.aspect = pano.width() / pano.height();
+            camera.updateProjectionMatrix();
+            renderer.setSize(pano.width(), pano.height());
+            affiche();
+            setTimeout(function() {
+                afficheInfo();
+                afficheAide();
+                afficheBarre(pano.width(), pano.height());
+                afficheInfoTitre();
+                var largeurFenetre;
+                if (bPleinEcran) {
+                    largeurFenetre = $("#pano1-" + num_pano).width();
+                }
+                else {
+                    largeurFenetre = $("#pano1-" + num_pano).width() - 15;
+                }
+                console.log("taille :" + largeurFenetre);
+                $("#divVignettes-" + num_pano).css({
+                    width: largeurFenetre
+                });
+                $("#vignettes-" + num_pano).css({
+                    transform: "translate(0px,0px)"
+                })
+                var tailleImages = ((vignettesTailleImage + 10) * vignettesPano.length);
+                console.log(vignettesPano + "tailleImages " + tailleImages + " > " + largeurFenetre + " < " + vignettesTailleImage);
+                if (largeurFenetre < tailleImages) {
+                    console.log("plus petit");
+                    $("#gaucheVignettes-" + num_pano).show();
+                    $("#droiteVignettes-" + num_pano).show();
+                }
+                else
+                {
+                    console.log("plus grand");
+                    $("#gaucheVignettes-" + num_pano).hide();
+                    $("#droiteVignettes-" + num_pano).hide();
+                }
 
-            $("#" + fenPanoramique).css({
-                width: largeur + "px",
-                height: hauteur + "px"
-            });
-            pano.css({
-                width: largeur + "px",
-                height: hauteur + "px"
-            });
+            }, 300);
         }
-
-        camera.aspect = pano.width() / pano.height();
-        camera.updateProjectionMatrix();
-        renderer.setSize(pano.width(), pano.height());
-        affiche();
-        setTimeout(function() {
-            afficheInfo();
-            afficheAide();
-            afficheBarre(pano.width(), pano.height());
-            afficheInfoTitre();
-        }, 200);
     }
 
 
@@ -1384,6 +1601,15 @@ function panovisu(num_pano) {
                     reseauxSociauxFacebook = "non";
                     reseauxSociauxGoogle = "non";
                     reseauxSociauxEmail = "non";
+                    vignettesAffiche = "non";
+                    vignettes = false;
+                    vignettesOpacite = 0.8;
+                    vignettesPosition = "bottom";
+                    vignettesFondCouleur = "green";
+                    vignettesTailleImage = 120;
+                    vignettesPano = new Array();
+                    pointsInteret = new Array();
+
                     /**
                      * Définition du panoramique à afficher 
                      */
@@ -1448,7 +1674,7 @@ function panovisu(num_pano) {
                      * Bouton de masquage
                      * 
                      */
-                    
+
                     var XMLMarcheArret = $(d).find('marcheArret');
                     marcheArretAffiche = XMLMarcheArret.attr('affiche') || marcheArretAffiche;
                     marcheArret = (marcheArretAffiche === "oui");
@@ -1490,6 +1716,9 @@ function panovisu(num_pano) {
                     dX = XMLBoutons.attr('dX') || dX;
                     dY = XMLBoutons.attr('dY') || dY;
                     i = 0;
+                    /*
+                     * Hotspots
+                     */
                     $(d).find('point').each(function() {
                         pointsInteret[i] = new pointInteret();
                         pointsInteret[i].xml = $(this).attr('xml');
@@ -1500,6 +1729,35 @@ function panovisu(num_pano) {
                         pointsInteret[i].lat = $(this).attr('lat') || 0;
                         i++;
                     });
+                    /*
+                     * 
+                     * barre des vignettes
+                     */
+                    var XMLVignettes = $(d).find('vignettes');
+                    vignettesAffiche = XMLVignettes.attr('affiche') || vignettesAffiche;
+                    vignettes = (vignettesAffiche === "oui");
+                    vignettesOpacite = parseFloat(XMLVignettes.attr('opacite')) || vignettesOpacite;
+                    vignettesPosition = XMLVignettes.attr('position') || vignettesPosition;
+                    vignettesFondCouleur = XMLVignettes.attr("fondCouleur") || vignettesFondCouleur;
+                    vignettesTaille = parseFloat(XMLVignettes.attr('taille')) || vignettesTaille;
+                    vignettesTailleImage = parseFloat(XMLVignettes.attr('tailleImage')) || vignettesTailleImage;
+
+
+                    /*
+                     *   vignettes des panoramiques
+                     */
+                    i = 0;
+                    $(d).find('imageVignette').each(function() {
+                        vignettesPano[i] = new vignettePano();
+                        vignettesPano[i].xml = $(this).attr('xml');
+                        vignettesPano[i].image = $(this).attr('image');
+                        vignettesPano[i].txt = $(this).attr('texte') || "";
+                        i++;
+                    });
+                    console.log(vignettesPano);
+
+
+
                     /**
                      * Initialisation de l'interface
                      */
@@ -1555,8 +1813,8 @@ function panovisu(num_pano) {
         $("<img>", {id: "RSTW-" + num_pano, class: "RS reseauSocial-twitter", src: "", title: "twitter"}).appendTo("#reseauxSociaux-" + num_pano);
         $("<img>", {id: "RSGO-" + num_pano, class: "RS reseauSocial-google", src: "", title: "google"}).appendTo("#reseauxSociaux-" + num_pano);
         $("<img>", {id: "RSFB-" + num_pano, class: "RS reseauSocial-fb", src: "", title: "facebook"}).appendTo("#reseauxSociaux-" + num_pano);
-        $("<a>",{id :"lienEmail"+num_pano,class: "RS reseauSocial-email",href:""}).appendTo("#reseauxSociaux-" + num_pano);
-        $("<img>", {id: "RSEM-" + num_pano,  src: "", title: "email"}).appendTo("#lienEmail"+num_pano);
+        $("<a>", {id: "lienEmail" + num_pano, class: "RS reseauSocial-email", href: ""}).appendTo("#reseauxSociaux-" + num_pano);
+        $("<img>", {id: "RSEM-" + num_pano, src: "", title: "email"}).appendTo("#lienEmail" + num_pano);
         $("#reseauxSociaux-" + num_pano).hide();
         $("<div>", {id: "info-" + num_pano, class: "info"}).appendTo("#" + fenetrePanoramique);
         $("<div>", {id: "infoBulle-" + num_pano, class: "infoBulle", style: "display:none;position: absolute;"}).appendTo("#" + fenetrePanoramique);
@@ -1566,6 +1824,11 @@ function panovisu(num_pano) {
          */
         $("<div>", {id: "pano1-" + num_pano, class: "pano1"}).appendTo("#" + fenetrePanoramique);
         $("<div>", {id: "container-" + num_pano, class: "container"}).appendTo("#pano1-" + num_pano);
+        $("<div>", {id: "divVignettes-" + num_pano, class: "vignettes"}).appendTo("#pano1-" + num_pano);
+        $("<img>", {id: "gaucheVignettes-" + num_pano, class: "positionVignettes", src: "panovisu/images/hotspots/interface/gauche.jpg"}).appendTo("#divVignettes-" + num_pano);
+        $("<img>", {id: "droiteVignettes-" + num_pano, class: "positionVignettes", src: "panovisu/images/hotspots/interface/droite.jpg"}).appendTo("#divVignettes-" + num_pano);
+
+        $("#divVignettes-" + num_pano).hide();
         /**
          * Création de la barre de boutons
          * et des trois éléments de barre 

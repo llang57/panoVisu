@@ -92,9 +92,12 @@ function panovisu(num_pano) {
             panovisu,
             fenetreUniteX,
             fenetreUniteY,
+            typeVignettes,
             marginPanoLeft,
             nbPanoCharges = 0,
-            positionVignettesX = 0;
+            positionVignettesX = 0,
+            positionVignettesY = 0
+            ;
     /**
      * Variables par défaut pour l'affichage du panoramique
      * 
@@ -189,6 +192,7 @@ function panovisu(num_pano) {
 
     $(document).on("webkitfullscreenchange mozfullscreenchange fullscreenchange MSFullscreenChange", function() {
         bPleinEcran = !bPleinEcran;
+        changeTaille();
     });
 
     $(document).on("click", "#container-" + num_pano, function(evenement) {
@@ -602,18 +606,42 @@ function panovisu(num_pano) {
             evenement.stopPropagation();
             element = $(this).attr("id");
             console.log(vignettesTailleImage + " " + elementsVisibles + "=>" + element);
-            deplace = vignettesTailleImage + 10;
-            if (element === "gaucheVignettes-" + num_pano) {
-                positionVignettesX += deplace;
+            if ((element === "gaucheVignettes-" + num_pano) || (element === "droiteVignettes-" + num_pano)) {
+                deplace = vignettesTailleImage + 10;
+                if (element === "gaucheVignettes-" + num_pano) {
+                    positionVignettesX += deplace;
+                }
+                else {
+                    positionVignettesX -= deplace;
+                }
+                if (positionVignettesX > 0)
+                    positionVignettesX = 0;
+                if (-positionVignettesX + $("#divVignettes-" + num_pano).width() > (vignettesTailleImage + 10) * vignettesPano.length)
+                    positionVignettesX = $("#divVignettes-" + num_pano).width() - (vignettesTailleImage + 10) * vignettesPano.length;
+                console.log("gauche / droite " + positionVignettesX);
+
+                $("#vignettes-" + num_pano).css({
+                    transform: "translate(" + positionVignettesX + "px,0px)"
+                })
             }
-            else {
-                positionVignettesX -= deplace;
+            if ((element === "basVignettes-" + num_pano) || (element === "hautVignettes-" + num_pano)) {
+                deplace = vignettesTailleImage / 2 + 5;
+                if (element === "hautVignettes-" + num_pano) {
+                    positionVignettesY += deplace;
+                }
+                else {
+                    positionVignettesY -= deplace;
+                }
+                if (positionVignettesY > 0)
+                    positionVignettesY = 0;
+                if (-positionVignettesY + $("#divVignettes-" + num_pano).height() > (vignettesTailleImage / 2 + 15) * vignettesPano.length)
+                    positionVignettesY = $("#divVignettes-" + num_pano).height() - (vignettesTailleImage / 2 + 15) * vignettesPano.length;
+                console.log("haut / bas " + positionVignettesY);
+
+                $("#vignettes-" + num_pano).css({
+                    transform: "translate(0px," + positionVignettesY + "px)"
+                })
             }
-            if (positionVignettesX > 0)
-                positionVignettesX = 0;
-            if (-positionVignettesX + $("#divVignettes-" + num_pano).width() > (vignettesTailleImage + 10) * vignettesPano.length)
-                positionVignettesX = $("#divVignettes-" + num_pano).width() - (vignettesTailleImage + 10) * vignettesPano.length;
-            console.log("calcule " + positionVignettesX);
             if (bAfficheInfo)
             {
                 $("#infoPanovisu-" + num_pano).fadeOut(2000, function() {
@@ -622,10 +650,6 @@ function panovisu(num_pano) {
                 });
 
             }
-
-            $("#vignettes-" + num_pano).css({
-                transform: "translate(" + positionVignettesX + "px,0px)"
-            })
         }
     });
 
@@ -674,6 +698,10 @@ function panovisu(num_pano) {
 
 
     function afficheVignettesHorizontales() {
+        typeVignettes = "horizontales";
+        $("#hautVignettes-" + num_pano).hide();
+        $("#basVignettes-" + num_pano).hide();
+
         $("<div>", {id: "vignettes-" + num_pano, class: "vignettes"}).appendTo("#divVignettes-" + num_pano);
         var hauteur = vignettesTailleImage / 2;
         var largeurFenetre = $("#pano1-" + num_pano).width() - 15;
@@ -731,6 +759,76 @@ function panovisu(num_pano) {
         }
         $("#divVignettes-" + num_pano).show();
     }
+
+    function afficheVignettesVerticales() {
+        typeVignettes = "verticales";
+        $("#gaucheVignettes-" + num_pano).hide();
+        $("#droiteVignettes-" + num_pano).hide();
+
+        $("<div>", {id: "vignettes-" + num_pano, class: "vignettes"}).appendTo("#divVignettes-" + num_pano);
+        var hauteur = $("#pano1-" + num_pano).height() - 15;
+        var largeurFenetre = vignettesTailleImage + 5;
+        if (largeurFenetre < (vignettesTailleImage + 10) * vignettesPano.length) {
+            $("#hautVignettes-" + num_pano).show(500);
+            $("#hautVignettes-" + num_pano).css({
+                left: 0,
+                top: 0,
+                height: 15,
+                width: vignettesTailleImage + 11,
+            });
+
+            $("#basVignettes-" + num_pano).show(500);
+            $("#basVignettes-" + num_pano).css({
+                left: 0,
+                height: 15,
+                width: vignettesTailleImage + 11,
+                bottom: 0
+            });
+        }
+        $("#divVignettes-" + num_pano).css(vignettesPosition, "0px");
+        $("#divVignettes-" + num_pano).css({
+            height: hauteur - ($("#info-" + num_pano).height() - 10) - 22,
+            width: largeurFenetre,
+            paddingLeft: "3px",
+            paddingTop: "17px",
+            paddingRight: "3px",
+            backgroundColor: vignettesFondCouleur,
+            opacity: vignettesOpacite,
+            overflow: "hidden",
+            top: ($("#info-" + num_pano).height() + 10) + "px"
+        });
+
+        console.log($("#pano1-" + num_pano).width() + ";" + $("#pano1-" + num_pano).height());
+        $("#vignettes-" + num_pano).css({
+            height: 3000,
+            width: largeurFenetre
+        });
+        $("#divVignettes-" + num_pano).css(vignettesPosition, "0px");
+        for (var i = 0; i < vignettesPano.length; i++) {
+            if (vignettesPano[i].txt !== "") {
+                texte = vignettesPano[i].txt;
+            }
+            else {
+                texte = vignettesPano[i].xml;
+            }
+
+            $("<img>", {
+                id: "imgVig" + i + "-" + num_pano,
+                class: "imgVignette",
+                src: vignettesPano[i].image,
+                title: vignettesPano[i].txt,
+                width: vignettesTailleImage,
+                height: vignettesTailleImage / 2
+            }).appendTo("#vignettes-" + num_pano).css({
+                marginBottom: "2px",
+                marginTop: "2px",
+                marginLeft: "0px",
+                paddingRight: "0px"
+            });
+        }
+        $("#divVignettes-" + num_pano).show();
+    }
+
 
     /**
      * 
@@ -846,7 +944,7 @@ function panovisu(num_pano) {
         else if (divObj.webkitRequestFullscreen) {
             divObj.webkitRequestFullscreen();
         }
-        bPleinEcran = true;
+        inFullScreen = true;
         return;
     }
     /**
@@ -869,7 +967,7 @@ function panovisu(num_pano) {
         else if (document.webkitCancelFullScreen) {
             document.webkitCancelFullScreen();
         }
-        bPleinEcran = false;
+        inFullScreen = false;
         return;
 
     }
@@ -900,55 +998,21 @@ function panovisu(num_pano) {
      * @returns {undefined}
      */
     function pleinEcran() {
-        if (vignettesPano.length > 0)
-        {
-            element = document.getElementById("panovisu-" + num_pano);
-            var largeurFenetre;
-            if (bPleinEcran) {
-                sortPleinEcran();
-            }
-            else {
-                passeEnPleinEcran(element);
-            }
-            camera.aspect = pano.width() / pano.height();
-            camera.updateProjectionMatrix();
-            renderer.setSize(pano.width(), pano.height());
-            affiche();
-            setTimeout(function() {
-                afficheInfo();
-                afficheAide();
-                afficheBarre(pano.width(), pano.height());
-                afficheInfoTitre();
-                var largeurFenetre;
-                if (bPleinEcran) {
-                    largeurFenetre = $("#pano1-" + num_pano).width();
-                }
-                else {
-                    largeurFenetre = $("#pano1-" + num_pano).width() - 15;
-                }
-                console.log("taille :" + largeurFenetre);
-                $("#divVignettes-" + num_pano).css({
-                    width: largeurFenetre
-                });
-                $("#vignettes-" + num_pano).css({
-                    transform: "translate(0px,0px)"
-                })
-                var tailleImages = ((vignettesTailleImage + 10) * vignettesPano.length);
-                console.log(vignettesPano + "tailleImages " + tailleImages + " > " + largeurFenetre + " < " + vignettesTailleImage);
-                if (largeurFenetre < tailleImages) {
-                    console.log("plus petit");
-                    $("#gaucheVignettes-" + num_pano).show();
-                    $("#droiteVignettes-" + num_pano).show();
-                }
-                else
-                {
-                    console.log("plus grand");
-                    $("#gaucheVignettes-" + num_pano).hide();
-                    $("#droiteVignettes-" + num_pano).hide();
-                }
-
-            }, 300);
+        element = document.getElementById("panovisu-" + num_pano);
+        var largeurFenetre;
+        if (screenfull.enabled) {
+            screenfull.toggle(element);
         }
+
+//        if (bPleinEcran) {
+//            sortPleinEcran();
+//        }
+//        else {
+//            passeEnPleinEcran(element);
+//        }
+        setTimeout(function() {
+            changeTaille();
+        }, 300);
     }
 
     /**
@@ -1296,41 +1360,49 @@ function panovisu(num_pano) {
      * @returns {undefined}
      */
     function changeTaille() {
-        if (vignettesPano.length > 0) {
-            if (!bPleinEcran) {
+        if (!bPleinEcran) {
 
 
-                if (fenetreUniteX === "%") {
-                    largeur = Math.round(fenetreX * $("#" + fenPanoramique).parent().width());
-                }
-                else {
-                    largeur = fenetreX;
-                }
-                if (fenetreUniteY === "%") {
-                    hauteur = Math.round(fenetreY * $("#" + fenPanoramique).parent().height());
-                }
-                else {
-                    hauteur = fenetreY;
-                }
-
-                $("#" + fenPanoramique).css({
-                    width: largeur + "px",
-                    height: hauteur + "px"
-                });
-                pano.css({
-                    width: largeur + "px",
-                    height: hauteur + "px"
-                });
+            if (fenetreUniteX === "%") {
+                largeur = Math.round(fenetreX * $("#" + fenPanoramique).parent().width());
             }
-            camera.aspect = pano.width() / pano.height();
-            camera.updateProjectionMatrix();
-            renderer.setSize(pano.width(), pano.height());
-            affiche();
-            setTimeout(function() {
-                afficheInfo();
-                afficheAide();
-                afficheBarre(pano.width(), pano.height());
-                afficheInfoTitre();
+            else {
+                largeur = fenetreX;
+            }
+            if (fenetreUniteY === "%") {
+                hauteur = Math.round(fenetreY * $("#" + fenPanoramique).parent().height());
+            }
+            else {
+                hauteur = fenetreY;
+            }
+
+            $("#" + fenPanoramique).css({
+                width: largeur + "px",
+                height: hauteur + "px"
+            });
+            pano.css({
+                width: largeur + "px",
+                height: hauteur + "px"
+            });
+        }
+        else{
+            largeur=screen.width;
+            hauteur=screen.height;
+            pano.css({
+                width: largeur + "px",
+                height: hauteur + "px"
+            });
+        }
+        camera.aspect = pano.width() / pano.height();
+        camera.updateProjectionMatrix();
+        renderer.setSize(pano.width(), pano.height());
+        affiche();
+        setTimeout(function() {
+            afficheInfo();
+            afficheAide();
+            afficheBarre(pano.width(), pano.height());
+            afficheInfoTitre();
+            if ((vignettesPano.length > 0) && (typeVignettes === "horizontales")) {
                 var largeurFenetre;
                 if (bPleinEcran) {
                     largeurFenetre = $("#pano1-" + num_pano).width();
@@ -1358,9 +1430,39 @@ function panovisu(num_pano) {
                     $("#gaucheVignettes-" + num_pano).hide();
                     $("#droiteVignettes-" + num_pano).hide();
                 }
+            }
+            if ((vignettesPano.length > 0) && (typeVignettes === "verticales")) {
+                var hauteurFenetre;
+                if (bPleinEcran) {
+                    hauteurFenetre = $("#pano1-" + num_pano).height() - ($("#info-" + num_pano).height() - 10) - 37;
+                }
+                else {
+                    hauteurFenetre = $("#pano1-" + num_pano).height() - ($("#info-" + num_pano).height() - 10) - 37;
+                }
+                console.log("hauteur :" + hauteurFenetre);
+                $("#divVignettes-" + num_pano).css({
+                    height: hauteurFenetre
+                });
+                $("#vignettes-" + num_pano).css({
+                    transform: "translate(0px,0px)"
+                })
+                var tailleImages = ((vignettesTailleImage / 2 + 5) * vignettesPano.length);
+                console.log(vignettesPano + "tailleImages " + tailleImages + " > " + largeurFenetre + " < " + vignettesTailleImage);
+                if (hauteurFenetre < tailleImages) {
+                    console.log("plus petit");
+                    $("#hautVignettes-" + num_pano).show();
+                    $("#basVignettes-" + num_pano).show();
+                }
+                else
+                {
+                    console.log("plus grand");
+                    $("#hautVignettes-" + num_pano).hide();
+                    $("#basVignettes-" + num_pano).hide();
+                }
+            }
 
-            }, 300);
-        }
+        }, 300);
+
     }
 
 
@@ -1609,7 +1711,13 @@ function panovisu(num_pano) {
                     vignettesTailleImage = 120;
                     vignettesPano = new Array();
                     pointsInteret = new Array();
-
+                    $("#divVignettes-" + num_pano).html("");
+                    $("<img>", {id: "gaucheVignettes-" + num_pano, class: "positionVignettes", src: "panovisu/images/hotspots/interface/gauche.jpg"}).appendTo("#divVignettes-" + num_pano);
+                    $("<img>", {id: "droiteVignettes-" + num_pano, class: "positionVignettes", src: "panovisu/images/hotspots/interface/droite.jpg"}).appendTo("#divVignettes-" + num_pano);
+                    $("<img>", {id: "hautVignettes-" + num_pano, class: "positionVignettes", src: "panovisu/images/hotspots/interface/haut.jpg"}).appendTo("#divVignettes-" + num_pano);
+                    $("<img>", {id: "basVignettes-" + num_pano, class: "positionVignettes", src: "panovisu/images/hotspots/interface/bas.jpg"}).appendTo("#divVignettes-" + num_pano);
+                    $("#divVignettes-" + num_pano).hide();
+                    $("#reseauxSociaux-" + num_pano).hide();
                     /**
                      * Définition du panoramique à afficher 
                      */
@@ -1786,6 +1894,7 @@ function panovisu(num_pano) {
                             initPanoSphere();
                             break;
                     }
+                    changeTaille();
                 });
 
     }
@@ -1825,8 +1934,6 @@ function panovisu(num_pano) {
         $("<div>", {id: "pano1-" + num_pano, class: "pano1"}).appendTo("#" + fenetrePanoramique);
         $("<div>", {id: "container-" + num_pano, class: "container"}).appendTo("#pano1-" + num_pano);
         $("<div>", {id: "divVignettes-" + num_pano, class: "vignettes"}).appendTo("#pano1-" + num_pano);
-        $("<img>", {id: "gaucheVignettes-" + num_pano, class: "positionVignettes", src: "panovisu/images/hotspots/interface/gauche.jpg"}).appendTo("#divVignettes-" + num_pano);
-        $("<img>", {id: "droiteVignettes-" + num_pano, class: "positionVignettes", src: "panovisu/images/hotspots/interface/droite.jpg"}).appendTo("#divVignettes-" + num_pano);
 
         $("#divVignettes-" + num_pano).hide();
         /**

@@ -14,14 +14,14 @@ and open the template in the editor.
         titreTaillePolice="16pt"
         titreTaille="100%"
         titreCouleur="yellow"
-        titreFond="green"
+        titreFond="red"
         titreOpacite="0.7"
         type="cube"
         affInfo="non"
         zeroNord="90"
     />
     <boutons 
-        styleBoutons="retinavert"
+        styleBoutons="retinarouge"
         couleur="none"
         bordure="none"
         deplacements="oui" 
@@ -33,7 +33,7 @@ and open the template in the editor.
         positionX="center"
         positionY="bottom" 
         dX="0" 
-        dY="70"
+        dY="10"
         visible="oui"
     />
     <boussole 
@@ -53,8 +53,8 @@ and open the template in the editor.
         google="oui"
         twitter="oui"
         email="oui"
-        positionX="left"
-        positionY="top"
+        positionX="right"
+        positionY="bottom"
         taille="30"
         dX="10"
         dY="10"   
@@ -62,7 +62,7 @@ and open the template in the editor.
     />
     <marcheArret
         affiche="oui"
-        image="MAVert2.png"
+        image="MARouge.png"
         navigation="oui"
         titre="oui"
         boussole="oui"
@@ -78,9 +78,9 @@ and open the template in the editor.
     <vignettes 
         affiche="oui"
         tailleImage="120"
-        fondCouleur="green"
-        opacite="0.8"
-        position="bottom"
+        fondCouleur="red"
+        opacite="1.0"
+        position="left"
     >
         <imageVignette 
             image="panos/piscine1_sphereVignette.jpg"
@@ -116,7 +116,7 @@ and open the template in the editor.
             long="180"
             lat="-10"
             xml="xml/beauport.xml"
-            image="panovisu/images/hotspots/hotspotvert.png"
+            image="panovisu/images/hotspots/hotspotrouge.png"
             info="Abbaye Maritime de Beauport"
             anime="true"        
         />
@@ -124,7 +124,7 @@ and open the template in the editor.
             long="95"
             lat="-5"
             xml="xml/panovisu.xml"
-            image="panovisu/images/hotspots/hotspotvert.png"
+            image="panovisu/images/hotspots/hotspotrouge.png"
             info="images de test"
             anime="false"
         />

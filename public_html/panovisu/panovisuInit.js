@@ -63,6 +63,7 @@ function ajoutePano(parametres) {
     numeroPano += 1;
     var pano = new panovisu(numeroPano);
     pano.initialisePano(parametres);
+    return pano;
 }
 
 include("panovisu/libs/screenfull.js");

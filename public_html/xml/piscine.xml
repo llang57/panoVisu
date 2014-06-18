@@ -110,7 +110,15 @@ and open the template in the editor.
             image="panos/piscine7_sphereVignette.jpg"
             xml="xml/beauport.xml"
         />
-    </vignettes>       
+    </vignettes>  
+    <images imgPhoto="panovisu/images/photos/photo1.png">
+        <image
+            img="images/test.img"
+            info="test d'image"
+            long="120"
+            lat="25" 
+            />
+    </images>     
     <hotspots>
         <point
             long="180"

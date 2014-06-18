@@ -61,6 +61,7 @@ function panovisu(num_pano) {
             isReloaded = false,
             hotSpot = new Array(),
             pointsInteret = new Array(),
+            
             vignettesPano = new Array(),
             mode = 1,
             longitude = 0,

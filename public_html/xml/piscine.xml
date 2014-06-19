@@ -16,6 +16,7 @@ and open the template in the editor.
         titreCouleur="yellow"
         titreFond="red"
         titreOpacite="0.7"
+        multiReso="oui"
         type="cube"
         affInfo="non"
         zeroNord="90"
@@ -111,16 +112,9 @@ and open the template in the editor.
             xml="xml/beauport.xml"
         />
     </vignettes>  
-    <images imgPhoto="panovisu/images/photos/photo1.png">
-        <image
-            img="images/test.img"
-            info="test d'image"
-            long="120"
-            lat="25" 
-            />
-    </images>     
     <hotspots>
         <point
+            type="panoramique"
             long="180"
             lat="-10"
             xml="xml/beauport.xml"
@@ -129,11 +123,57 @@ and open the template in the editor.
             anime="true"        
         />
         <point
+            type="panoramique"
             long="95"
             lat="-5"
             xml="xml/panovisu.xml"
             image="panovisu/images/hotspots/hotspotrouge.png"
             info="images de test"
+            anime="false"
+        />
+        <point
+            type="image"
+            long="120"
+            lat="10"
+            img="images/photo1.jpg"
+            image="panovisu/images/hotspots/photo1.png"
+            info="Afficher une photo"
+            anime="false"
+        />
+        <point
+            type="image"
+            long="125"
+            lat="10"
+            img="images/photo2.jpg"
+            image="panovisu/images/hotspots/photo2.png"
+            info="Afficher une photo"
+            anime="false"
+        />
+        <point
+            type="image"
+            long="130"
+            lat="10"
+            img="images/photo3.jpg"
+            image="panovisu/images/hotspots/photo3.png"
+            info="Afficher une photo"
+            anime="false"
+        />
+        <point
+            type="html"
+            long="135"
+            lat="10"
+            url="http://lemondea360.fr"
+            image="panovisu/images/hotspots/home.png"
+            info="Le monde à 360°"
+            anime="false"
+        />
+        <point
+            type="html"
+            long="140"
+            lat="10"
+            url="pages/test.html"
+            image="panovisu/images/hotspots/home.png"
+            info="Le monde à 360°"
             anime="false"
         />
     </hotspots>

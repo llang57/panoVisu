@@ -35,9 +35,10 @@ function panovisu(num_pano) {
     }
 
     function pointInteret() {
+        this.type = "panoramique";
         this.long = 0;
         this.lat = 0;
-        this.xml = "";
+        this.contenu = "";
         this.image = "";
         this.anime = "false";
         this.info = "";
@@ -61,7 +62,6 @@ function panovisu(num_pano) {
             isReloaded = false,
             hotSpot = new Array(),
             pointsInteret = new Array(),
-            
             vignettesPano = new Array(),
             mode = 1,
             longitude = 0,
@@ -109,6 +109,7 @@ function panovisu(num_pano) {
             styleBoutons,
             bordure,
             panoTitre,
+            multiReso,
             titrePolice,
             titreTaille,
             titreTailleUnite,
@@ -220,10 +221,20 @@ function panovisu(num_pano) {
                 {
                     if (object.id === hotSpot[i].id) {
                         numHS = i;
-                        $("#info-" + num_pano).fadeOut(1000);
-                        pano1.fadeOut(1000, function() {
-                            chargeNouveauPano(numHS);
-                        });
+                        switch (pointsInteret[i].type) {
+                            case "panoramique" :
+                                $("#info-" + num_pano).fadeOut(1000);
+                                pano1.fadeOut(1000, function() {
+                                    chargeNouveauPano(numHS);
+                                });
+                                break;
+                            case "image" :
+                                afficheImage(pointsInteret[numHS].contenu);
+                                break;
+                            case "html" :
+                                afficheHTML(pointsInteret[numHS].contenu);
+                                break;
+                        }
                     }
                 }
 
@@ -305,7 +316,7 @@ function panovisu(num_pano) {
                     if (object.id === hotSpot[i].id) {
                         haut = Y - 5;
                         gauche = X + 20;
-                        (pointsInteret[i].info !== "") ? $("#infoBulle-" + num_pano).html(pointsInteret[i].info) : $("#infoBulle-" + num_pano).html(pointsInteret[i].xml);
+                        (pointsInteret[i].info !== "") ? $("#infoBulle-" + num_pano).html(pointsInteret[i].info) : $("#infoBulle-" + num_pano).html(pointsInteret[i].contenu);
                         $("#infoBulle-" + num_pano).css({top: haut + "px", left: gauche + "px"});
                         $("#infoBulle-" + num_pano).show();
                     }
@@ -623,7 +634,7 @@ function panovisu(num_pano) {
 
                 $("#vignettes-" + num_pano).css({
                     transform: "translate(" + positionVignettesX + "px,0px)"
-                })
+                });
             }
             if ((element === "basVignettes-" + num_pano) || (element === "hautVignettes-" + num_pano)) {
                 deplace = vignettesTailleImage / 2 + 5;
@@ -641,7 +652,7 @@ function panovisu(num_pano) {
 
                 $("#vignettes-" + num_pano).css({
                     transform: "translate(0px," + positionVignettesY + "px)"
-                })
+                });
             }
             if (bAfficheInfo)
             {
@@ -775,7 +786,7 @@ function panovisu(num_pano) {
                 left: 0,
                 top: 0,
                 height: 15,
-                width: vignettesTailleImage + 11,
+                width: vignettesTailleImage + 11
             });
 
             $("#basVignettes-" + num_pano).show(500);
@@ -858,6 +869,115 @@ function panovisu(num_pano) {
         }
 
     }
+//    $(document).on("click", "#divImage-" + num_pano, function() {
+//        $("#divImage-" + num_pano).animate({opacity: 0.01}, 10, function() {
+//            $("#divImage-" + num_pano).hide();
+//        });
+//
+//    });
+
+    function afficheImage(image) {
+        var lrg = $("#pano1-" + num_pano).width();
+        var haut = $("#pano1-" + num_pano).height();
+        posX = Math.round(lrg * 0.1);
+        posY = Math.round(haut * 0.1);
+        var img = new Image();
+        img.src = image;
+        img.onload = function() {
+            var hautImg = img.height;
+            var largImg = img.width;
+            ratio = largImg / hautImg;
+            var larg1 = lrg - 2 * posX;
+            var haut1 = larg1 / ratio;
+//            alert(hautImg + ", " + largImg+"ratio : "+ratio);
+            if (haut1 > haut - 2 * posY) {
+                hautImg = haut - 2 * posY;
+                largImg = Math.round(hautImg * ratio);
+            }
+            else {
+                largImg = lrg - 2 * posX;
+                hautImg = Math.round(largImg / ratio);
+
+            }
+            mrgX = Math.round((lrg - 2 * posX - largImg) / 2);
+            mrgY = Math.round((haut - 2 * posY - hautImg) / 2);
+//            alert(hautImg + ", " + largImg+"ratio : "+ratio);
+            $("#divImage-" + num_pano).html("");
+            $("#divImage-" + num_pano).css({
+                width: Math.round(lrg - 2 * posX) + "px",
+                height: Math.round(haut - 2 * posY) + "px",
+                padding: posY + "px " + posX + "px",
+                top: "0px",
+                left: "0px",
+                zIndex: 10010,
+                opacity: 0,
+                backgroundColor: "rgba(0,0,0,0.7)"
+            });
+
+            $("<img>", {id: "hsImg-" + num_pano, class: "hsImg", src: image, title: "Cliquz sur l'image pour quitter"}).appendTo("#divImage-" + num_pano);
+
+
+            $("#hsImg-" + num_pano).css({
+                width: largImg + "px",
+                height: hautImg + "px",
+                marginTop: mrgY + "px",
+                marginLeft: mrgX + "px"
+            });
+
+            $("<img>", {
+                id: "imgFerme-" + num_pano,
+                class: "imgFerme",
+                src: "panovisu/images/fermer.png",
+                style: "height :30px;width : 30px;position : absolute;top:10px;right : " + posY + "px;"
+            }).appendTo("#divImage-" + num_pano);
+
+            $("#divImage-" + num_pano).show();
+            $("#divImage-" + num_pano).animate({opacity: 1}, 1500);
+
+        };
+    }
+
+    $(document).on("click", "#imgFerme-" + num_pano, function() {
+        $("#divHTML-" + num_pano).hide();
+        $("#divImage-" + num_pano).hide();
+    });
+
+    function afficheHTML(url) {
+        var lrg = $("#pano1-" + num_pano).width();
+        var haut = $("#pano1-" + num_pano).height();
+        posX = Math.round(lrg * 0.02);
+        posY = Math.round(haut * 0.02);
+//            alert(hautImg + ", " + largImg+"ratio : "+ratio);
+        $("#divHTML-" + num_pano).html("");
+        $("#divHTML-" + num_pano).css({
+            width: Math.round(lrg - 2 * posX) + "px",
+            height: Math.round(haut - 2 * posY) + "px",
+            padding: posY + "px " + posX + "px",
+            top: "0px",
+            left: "0px",
+            zIndex: 10010,
+            opacity: 0,
+            backgroundColor: "rgba(0,0,0,0.7)"
+        });
+        $("<iframe>", {
+            id: "hsHTML-" + num_pano,
+            class: "hsHTML",
+            src: url,
+            height: Math.round(haut - 2 * posY) + "px",
+            width: Math.round(lrg - 2 * posX) + "px"
+        }).appendTo("#divHTML-" + num_pano);
+
+        $("<img>", {
+            id: "imgFerme-" + num_pano,
+            class: "imgFerme",
+            src: "panovisu/images/fermer.png",
+            style: "height :30px;width : 30px;position : absolute;top : 10px;right : 15px;"
+        }).appendTo("#divHTML-" + num_pano);
+
+        $("#divHTML-" + num_pano).show();
+        $("#divHTML-" + num_pano).animate({opacity: 1}, 1500);
+    }
+
 
     /**
      * 
@@ -985,7 +1105,7 @@ function panovisu(num_pano) {
         $("#infoBulle-" + num_pano).hide();
         $("#infoBulle-" + num_pano).html("");
         isReloaded = true;
-        xmlFile = pointsInteret[nHotspot].xml;
+        xmlFile = pointsInteret[nHotspot].contenu;
         hotSpot = new Array();
         pointsInteret = new Array();
         numHotspot = 0;
@@ -1131,7 +1251,7 @@ function panovisu(num_pano) {
             $("#RSTW-" + num_pano + ", #RSGO-" + num_pano + ", #RSFB-" + num_pano + ", #RSEM-" + num_pano).css({
                 width: reseauxSociauxTaille + "px",
                 height: reseauxSociauxTaille + "px",
-                top: "0px",
+                top: "0px"
             });
             if (reseauxSociauxTwitter === "non")
                 $("#RSTW-" + num_pano).hide(0);
@@ -1176,7 +1296,7 @@ function panovisu(num_pano) {
         pano.width(largeur);
         pano.height(hauteur);
         afficheBarre(pano.width(), pano.height());
-        
+
         afficheInfo();
         afficheInfoTitre();
         afficheAide();
@@ -1227,7 +1347,7 @@ function panovisu(num_pano) {
             for (var i = 0; i < pointsInteret.length; i++)
             {
                 var pi = pointsInteret[i];
-                creeHotspot(pi.long, pi.lat, pi.xml, pi.image);
+                creeHotspot(pi.long, pi.lat, pi.contenu, pi.image);
             }
             timers = setInterval(function() {
                 rafraichitHS();
@@ -1243,6 +1363,29 @@ function panovisu(num_pano) {
                 demarreAutoRotation();
         });
     }
+    function loadTexture2(path) {
+        var texture = new THREE.Texture(texture_placeholder);
+        var material = new THREE.MeshBasicMaterial({map: texture, overdraw: true});
+        var image = new Image();
+        image.onload = function() {
+            texture.image = this;
+            texture.needsUpdate = true;
+            nbPanoCharges += 1;
+            if (nbPanoCharges < 6)
+                $("#panovisuCharge-" + num_pano).html(nbPanoCharges + "/6");
+            else
+            {
+                $("#panovisuCharge-" + num_pano).html("&nbsp;");
+                afficheBarre(pano.width(), pano.height());
+                afficheInfoTitre();
+            }
+            affiche();
+        };
+        image.src = path;
+        return material;
+    }
+
+
     /**
      * 
      * @param {type} path
@@ -1263,6 +1406,21 @@ function panovisu(num_pano) {
                 $("#panovisuCharge-" + num_pano).html("&nbsp;");
                 afficheBarre(pano.width(), pano.height());
                 afficheInfoTitre();
+                if (multiReso === "oui")
+                {
+                    var materials1 = [
+                        loadTexture2(panoImage + 'niv1_r.jpg'), // droite   x+
+                        loadTexture2(panoImage + 'niv1_l.jpg'), // gauche   x-
+                        loadTexture2(panoImage + 'niv1_u.jpg'), // dessus   y+
+                        loadTexture2(panoImage + 'niv1_d.jpg'), // dessous  y-
+                        loadTexture2(panoImage + 'niv1_f.jpg'), // devant   z+
+                        loadTexture2(panoImage + 'niv1_b.jpg')  // derriere z-
+                    ];
+                    var mesh1 = new THREE.Mesh(new THREE.CubeGeometry(399, 399, 399, 10, 10, 10), new THREE.MeshFaceMaterial(materials1));
+                    mesh1.scale.x = -1;
+                    scene.add(mesh1);
+                }
+
             }
             affiche();
         };
@@ -1309,7 +1467,7 @@ function panovisu(num_pano) {
             loadTexture(panoImage + '_f.jpg'), // devant   z+
             loadTexture(panoImage + '_b.jpg')  // derriere z-
         ];
-        mesh = new THREE.Mesh(new THREE.CubeGeometry(300, 300, 300, 10, 10, 10), new THREE.MeshFaceMaterial(materials));
+        mesh = new THREE.Mesh(new THREE.CubeGeometry(400, 400, 400, 10, 10, 10), new THREE.MeshFaceMaterial(materials));
         mesh.scale.x = -1;
         scene.add(mesh);
         renderer.setSize(pano.width(), pano.height());
@@ -1318,7 +1476,7 @@ function panovisu(num_pano) {
             for (var i = 0; i < pointsInteret.length; i++)
             {
                 var pi = pointsInteret[i];
-                creeHotspot(pi.long, pi.lat, pi.xml, pi.image);
+                creeHotspot(pi.long, pi.lat, pi.contenu, pi.image);
             }
             affiche();
             timers = setInterval(function() {
@@ -1388,9 +1546,9 @@ function panovisu(num_pano) {
                 height: hauteur + "px"
             });
         }
-        else{
-            largeur=screen.width;
-            hauteur=screen.height;
+        else {
+            largeur = screen.width;
+            hauteur = screen.height;
             pano.css({
                 width: largeur + "px",
                 height: hauteur + "px"
@@ -1419,7 +1577,7 @@ function panovisu(num_pano) {
                 });
                 $("#vignettes-" + num_pano).css({
                     transform: "translate(0px,0px)"
-                })
+                });
                 var tailleImages = ((vignettesTailleImage + 10) * vignettesPano.length);
                 console.log(vignettesPano + "tailleImages " + tailleImages + " > " + largeurFenetre + " < " + vignettesTailleImage);
                 if (largeurFenetre < tailleImages) {
@@ -1448,7 +1606,7 @@ function panovisu(num_pano) {
                 });
                 $("#vignettes-" + num_pano).css({
                     transform: "translate(0px,0px)"
-                })
+                });
                 var tailleImages = ((vignettesTailleImage / 2 + 5) * vignettesPano.length);
                 console.log(vignettesPano + "tailleImages " + tailleImages + " > " + largeurFenetre + " < " + vignettesTailleImage);
                 if (hauteurFenetre < tailleImages) {
@@ -1641,6 +1799,7 @@ function panovisu(num_pano) {
     function chargeXML(xmlFile) {
         $.get(xmlFile,
                 function(d) {
+                    var typeHSDefaut = "panoramique";
                     panoImage = "faces";
                     couleur = "none";
                     styleBoutons = "classique";
@@ -1708,6 +1867,7 @@ function panovisu(num_pano) {
                     reseauxSociauxEmail = "non";
                     vignettesAffiche = "non";
                     vignettes = false;
+                    multiReso = "non";
                     vignettesOpacite = 0.8;
                     vignettesPosition = "bottom";
                     vignettesFondCouleur = "green";
@@ -1734,6 +1894,7 @@ function panovisu(num_pano) {
                     titreFond = XMLPano.attr('titreFond') || titreFond;
                     titreOpacite = XMLPano.attr('titreOpacite') || titreOpacite;
                     panoType = XMLPano.attr('type') || panoType;
+                    multiReso = XMLPano.attr('multiReso') || multiReso;
                     autoRotation = XMLPano.attr('rotation') || autoRotation;
                     longitude = parseFloat(XMLPano.attr('regardX')) || longitude;
                     latitude = parseFloat(XMLPano.attr('regardY')) || latitude;
@@ -1832,7 +1993,18 @@ function panovisu(num_pano) {
                      */
                     $(d).find('point').each(function() {
                         pointsInteret[i] = new pointInteret();
-                        pointsInteret[i].xml = $(this).attr('xml');
+                        pointsInteret[i].type = $(this).attr('type') || pointsInteret[i].type;
+                        switch (pointsInteret[i].type) {
+                            case "panoramique" :
+                                pointsInteret[i].contenu = $(this).attr('xml');
+                                break;
+                            case "image" :
+                                pointsInteret[i].contenu = $(this).attr('img');
+                                break;
+                            case "html" :
+                                pointsInteret[i].contenu = $(this).attr('url');
+                                break;
+                        }
                         pointsInteret[i].info = $(this).attr('info') || "";
                         pointsInteret[i].image = $(this).attr('image') || "panovisu/images/sprite2.png";
                         pointsInteret[i].long = $(this).attr('long') || 0;
@@ -1939,6 +2111,11 @@ function panovisu(num_pano) {
         $("<div>", {id: "divVignettes-" + num_pano, class: "vignettes"}).appendTo("#pano1-" + num_pano);
 
         $("#divVignettes-" + num_pano).hide();
+        $("<div>", {id: "divImage-" + num_pano, class: "vignettes"}).appendTo("#pano1-" + num_pano);
+        $("#divImage-" + num_pano).hide();
+        $("<div>", {id: "divHTML-" + num_pano, class: "vignettes"}).appendTo("#pano1-" + num_pano);
+        $("#divHTML-" + num_pano).hide();
+
         /**
          * Création de la barre de boutons
          * et des trois éléments de barre 

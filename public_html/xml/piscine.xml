@@ -69,6 +69,7 @@ and open the template in the editor.
         boussole="oui"
         plan="oui"
         reseaux="oui"
+        vignettes="oui"
         positionX="right"
         positionY="top"
         taille="30"

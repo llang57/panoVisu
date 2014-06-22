@@ -164,6 +164,7 @@ function panovisu(num_pano) {
             marcheArretBoussole,
             marcheArretPlan,
             marcheArretReseaux,
+            marcheArretVignettes,
             marcheArretTaille,
             reseauxSociaux,
             reseauxSociauxAffiche,
@@ -680,6 +681,8 @@ function panovisu(num_pano) {
                 $("#plan-" + num_pano).fadeOut(500);
             if (marcheArretReseaux === "oui")
                 $("#reseauxSociaux-" + num_pano).fadeOut(500);
+            if (marcheArretVignettes === "oui")
+                $("#divVignettes-" + num_pano).fadeOut(500);
             elementsVisibles = false;
         }
         else {
@@ -693,6 +696,8 @@ function panovisu(num_pano) {
                 $("#plan-" + num_pano).fadeIn(500);
             if (marcheArretReseaux === "oui")
                 $("#reseauxSociaux-" + num_pano).fadeIn(500);
+            if (marcheArretVignettes === "oui")
+                $("#divVignettes-" + num_pano).fadeIn(500);
             elementsVisibles = true;
         }
     });
@@ -1853,6 +1858,7 @@ function panovisu(num_pano) {
                     marcheArretBoussole = "non";
                     marcheArretPlan = "non";
                     marcheArretReseaux = "non";
+                    marcheArretVignettes = "non";
                     reseauxSociaux = false;
                     reseauxSociauxAffiche = "non";
                     reseauxSociauxOpacite = 0.8;
@@ -1962,6 +1968,7 @@ function panovisu(num_pano) {
                     marcheArretTitre = XMLMarcheArret.attr('titre') || marcheArretTitre;
                     marcheArretPlan = XMLMarcheArret.attr('plan') || marcheArretPlan;
                     marcheArretReseaux = XMLMarcheArret.attr('reseaux') || marcheArretReseaux;
+                    marcheArretVignettes = XMLMarcheArret.attr('vignettes') || marcheArretVignettes;
 
                     //alert(boussoleImage);
                     /**

@@ -17,6 +17,7 @@ and open the template in the editor.
         titreFond="red"
         titreOpacite="0.7"
         multiReso="oui"
+        nombreNiveaux="2"
         type="cube"
         affInfo="non"
         zeroNord="90"

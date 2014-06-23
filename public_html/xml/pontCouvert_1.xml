@@ -13,6 +13,8 @@ and open the template in the editor.
         type="sphere"
         afficheTitre="oui"
         afficheInfo="non"
+        multiReso="oui"
+        nombreNiveaux="2"
         zeroNord="180"
     />
     <boutons 

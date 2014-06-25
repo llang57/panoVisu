@@ -22,6 +22,10 @@ and open the template in the editor.
         affInfo="non"
         zeroNord="90"
     />
+    <suivantPrecedent
+        suivant="xml/beauport.xml"            
+        precedent="xml/pontCouvert_1.xml"            
+    />    
     <boutons 
         styleBoutons="retinarouge"
         couleur="none"

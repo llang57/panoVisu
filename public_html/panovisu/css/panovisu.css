@@ -245,3 +245,31 @@ and open the template in the editor.
 }
 
 
+.suivant{
+    width: 50px;
+    height : 100px;
+    position: absolute;
+    top : 100px;
+    right : 0px;
+    background: url(../images/suivant.png) center center no-repeat;
+    background-color: rgba(0,0,0,0.3);
+    border-radius: 10px 0px 0px 10px; 
+    opacity : 0.2;
+    z-index: 500;
+}
+.precedent{
+    width: 50px;
+    height : 100px;
+    position: absolute;
+    top : 100px;
+    left : 0px;
+    background: url(../images/precedent.png) center center no-repeat;
+    background-color: rgba(0,0,0,0.3);
+    opacity : 0.2;
+    border-radius: 0 10px 10px 0; 
+
+    z-index: 500;
+}
+.suivant:hover,.precedent:hover{
+    opacity: 0.9;
+}

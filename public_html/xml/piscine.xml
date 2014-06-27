@@ -50,7 +50,7 @@ and open the template in the editor.
         positionX="right"
         opacite="0.5"
         dX="10"
-        dY="70"
+        dY="10"
         aiguille="oui"
     />
     <reseauxSociaux 
@@ -87,7 +87,7 @@ and open the template in the editor.
         tailleImage="120"
         fondCouleur="red"
         opacite="1.0"
-        position="left"
+        position="bottom"
     >
         <imageVignette 
             image="panos/piscine1_sphereVignette.jpg"

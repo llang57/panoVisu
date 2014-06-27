@@ -689,12 +689,12 @@ function panovisu(num_pano) {
             if (marcheArretVignettes === "oui")
             {
                 $("#divVignettes-" + num_pano).fadeOut(500);
-                console.log("position vignettes :"+vignettesPosition);
-                if (vignettesPosition==="left"){
-                    $("#divPrecedent-"+num_pano).css({left:0});
+                console.log("position vignettes :" + vignettesPosition);
+                if (vignettesPosition === "left") {
+                    $("#divPrecedent-" + num_pano).css({left: 0});
                 }
-                if (vignettesPosition==="right"){
-                    $("#divSuivant-"+num_pano).css({right:0});
+                if (vignettesPosition === "right") {
+                    $("#divSuivant-" + num_pano).css({right: 0});
                 }
             }
             elementsVisibles = false;
@@ -713,22 +713,22 @@ function panovisu(num_pano) {
             if (marcheArretVignettes === "oui")
             {
                 $("#divVignettes-" + num_pano).fadeIn(500);
-                console.log("position vignettes :"+vignettesPosition);
-                var largeur=$("#divVignettes-" + num_pano).width()+6;
-                if (vignettesPosition==="left"){
-                    $("#divPrecedent-"+num_pano).css({left:largeur});
+                console.log("position vignettes :" + vignettesPosition);
+                var largeur = $("#divVignettes-" + num_pano).width() + 6;
+                if (vignettesPosition === "left") {
+                    $("#divPrecedent-" + num_pano).css({left: largeur});
                 }
-                if (vignettesPosition==="right"){
-                    $("#divSuivant-"+num_pano).css({right:largeur});
+                if (vignettesPosition === "right") {
+                    $("#divSuivant-" + num_pano).css({right: largeur});
                 }
-                
+
             }
             elementsVisibles = true;
         }
     });
 
-$(document).on("click","#divSuivant-"+num_pano,function(){
-            clearInterval(timers);
+    $(document).on("click", "#divSuivant-" + num_pano, function() {
+        clearInterval(timers);
         longitude = 0;
         latitude = 0;
         fov = 75;
@@ -743,10 +743,10 @@ $(document).on("click","#divSuivant-"+num_pano,function(){
         $("#marcheArret-" + num_pano).hide();
         chargeXML(xmlFile);
 
-})
+    })
 
-    $(document).on("click","#divPrecedent-"+num_pano,function(){
-            clearInterval(timers);
+    $(document).on("click", "#divPrecedent-" + num_pano, function() {
+        clearInterval(timers);
         longitude = 0;
         latitude = 0;
         fov = 75;
@@ -761,7 +761,7 @@ $(document).on("click","#divSuivant-"+num_pano,function(){
         $("#marcheArret-" + num_pano).hide();
         chargeXML(xmlFile);
 
-})
+    })
 
     /**
      * 
@@ -834,6 +834,11 @@ $(document).on("click","#divSuivant-"+num_pano,function(){
                 height: vignettesTailleImage / 2
             }).appendTo("#vignettes-" + num_pano);
         }
+        dY1 = parseInt(dY + $("#divVignettes-" + num_pano).height());
+        if (positionY === "bottom")
+            $("#barre-" + num_pano).css({bottom: dY1 + +"px"});
+
+
         $("#divVignettes-" + num_pano).show();
     }
 
@@ -906,10 +911,17 @@ $(document).on("click","#divSuivant-"+num_pano,function(){
         $("#divVignettes-" + num_pano).show();
         if (vignettesPosition === "right") {
             $("#divSuivant-" + num_pano).css("right", largeurFenetre + 6);
+            dX1 = parseInt(dX + largeurFenetre);
+            if (positionX === "left")
+                $("#barre-" + num_pano).css({right: dX1 + "px"});
         }
         if (vignettesPosition === "left") {
             $("#divPrecedent-" + num_pano).css("left", largeurFenetre + 6);
+            dX1 = parseInt(dX + largeurFenetre);
+            if (positionX === "left")
+                $("#barre-" + num_pano).css({left: dX1 + "px"});
         }
+
     }
 
 
@@ -1111,8 +1123,7 @@ $(document).on("click","#divSuivant-"+num_pano,function(){
                     $("#barre-" + num_pano).css({top: posY + "px"});
                     break;
                 case "bottom" :
-                    posY = -(h1 + dY1);
-                    $("#barre-" + num_pano).css({top: posY + "px"});
+                    $("#barre-" + num_pano).css({bottom: dY1 + "px"});
                     break;
             }
         }, 200);
@@ -2349,8 +2360,8 @@ $(document).on("click","#divSuivant-"+num_pano,function(){
         $("#divHTML-" + num_pano).hide();
 
 
-        $("<div>", {id: "divPrecedent-" + num_pano, class: "precedent",title : "Panoramique précédent"}).appendTo("#pano1-" + num_pano);
-        $("<div>", {id: "divSuivant-" + num_pano, class: "suivant",title : "Panoramique suivant"}).appendTo("#pano1-" + num_pano);
+        $("<div>", {id: "divPrecedent-" + num_pano, class: "precedent", title: "Panoramique précédent"}).appendTo("#pano1-" + num_pano);
+        $("<div>", {id: "divSuivant-" + num_pano, class: "suivant", title: "Panoramique suivant"}).appendTo("#pano1-" + num_pano);
         $("#divPrecedent-" + num_pano).hide();
         $("#divSuivant-" + num_pano).hide();
 

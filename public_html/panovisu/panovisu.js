@@ -593,10 +593,8 @@ function panovisu(num_pano) {
 
     $(document).on("click", ".imgVignette", function(evenement) {
         if (vignettesPano.length !== 0) {
-            console.log(vignettesPano);
             var element = $(this).attr("id");
             var numelement = parseInt(element.substring(6).split("-")[0]);
-            console.log("Numéro" + (numelement + 1));
             clearInterval(timers);
             longitude = 0;
             latitude = 0;
@@ -623,7 +621,6 @@ function panovisu(num_pano) {
         if (vignettesTailleImage) {
             evenement.stopPropagation();
             element = $(this).attr("id");
-            console.log(vignettesTailleImage + " " + elementsVisibles + "=>" + element);
             if ((element === "gaucheVignettes-" + num_pano) || (element === "droiteVignettes-" + num_pano)) {
                 deplace = vignettesTailleImage + 10;
                 if (element === "gaucheVignettes-" + num_pano) {
@@ -636,7 +633,6 @@ function panovisu(num_pano) {
                     positionVignettesX = 0;
                 if (-positionVignettesX + $("#divVignettes-" + num_pano).width() > (vignettesTailleImage + 10) * vignettesPano.length)
                     positionVignettesX = $("#divVignettes-" + num_pano).width() - (vignettesTailleImage + 10) * vignettesPano.length;
-                console.log("gauche / droite " + positionVignettesX);
 
                 $("#vignettes-" + num_pano).css({
                     transform: "translate(" + positionVignettesX + "px,0px)"
@@ -654,8 +650,6 @@ function panovisu(num_pano) {
                     positionVignettesY = 0;
                 if (-positionVignettesY + $("#divVignettes-" + num_pano).height() > (vignettesTailleImage / 2 + 15) * vignettesPano.length)
                     positionVignettesY = $("#divVignettes-" + num_pano).height() - (vignettesTailleImage / 2 + 15) * vignettesPano.length;
-                console.log("haut / bas " + positionVignettesY);
-
                 $("#vignettes-" + num_pano).css({
                     transform: "translate(0px," + positionVignettesY + "px)"
                 });
@@ -674,7 +668,6 @@ function panovisu(num_pano) {
 
     $(document).on("click", ".marcheArret", function(evenement) {
         evenement.stopPropagation();
-        console.log(vignettesTailleImage + " " + elementsVisibles);
         if (elementsVisibles) {
             if (marcheArretNavigation === "oui")
                 $("#barre-" + num_pano).fadeOut(500);
@@ -689,7 +682,6 @@ function panovisu(num_pano) {
             if (marcheArretVignettes === "oui")
             {
                 $("#divVignettes-" + num_pano).fadeOut(500);
-                console.log("position vignettes :" + vignettesPosition);
                 if (vignettesPosition === "left") {
                     $("#divPrecedent-" + num_pano).css({left: 0});
                 }
@@ -713,7 +705,6 @@ function panovisu(num_pano) {
             if (marcheArretVignettes === "oui")
             {
                 $("#divVignettes-" + num_pano).fadeIn(500);
-                console.log("position vignettes :" + vignettesPosition);
                 var largeur = $("#divVignettes-" + num_pano).width() + 6;
                 if (vignettesPosition === "left") {
                     $("#divPrecedent-" + num_pano).css({left: largeur});
@@ -811,7 +802,6 @@ function panovisu(num_pano) {
             overflow: "hidden"
         });
 
-        console.log($("#pano1-" + num_pano).width() + ";" + $("#pano1-" + num_pano).height());
         $("#vignettes-" + num_pano).css({
             height: hauteur,
             width: 3000
@@ -840,6 +830,11 @@ function panovisu(num_pano) {
 
 
         $("#divVignettes-" + num_pano).show();
+        if (vignettesPosition === "bottom") {
+            if (boussole && (boussolePositionY === "bottom"))
+                $("#boussole-" + num_pano).css(boussolePositionY, (parseInt(boussoleDY) + parseInt(vignettesTailleImage)/2.0 + 5) + "px");
+        }
+
     }
 
     function afficheVignettesVerticales() {
@@ -850,7 +845,7 @@ function panovisu(num_pano) {
         $("<div>", {id: "vignettes-" + num_pano, class: "vignettes"}).appendTo("#divVignettes-" + num_pano);
         var hauteur = $("#pano1-" + num_pano).height() - 15;
         var largeurFenetre = vignettesTailleImage + 5;
-        if (largeurFenetre < (vignettesTailleImage + 10) * vignettesPano.length) {
+        if (hauteur < (vignettesTailleImage + 10) / 2 * vignettesPano.length) {
             $("#hautVignettes-" + num_pano).show(500);
             $("#hautVignettes-" + num_pano).css({
                 left: 0,
@@ -880,7 +875,6 @@ function panovisu(num_pano) {
             top: ($("#info-" + num_pano).height() + 10) + "px"
         });
 
-        console.log($("#pano1-" + num_pano).width() + ";" + $("#pano1-" + num_pano).height());
         $("#vignettes-" + num_pano).css({
             height: 3000,
             width: largeurFenetre
@@ -911,15 +905,19 @@ function panovisu(num_pano) {
         $("#divVignettes-" + num_pano).show();
         if (vignettesPosition === "right") {
             $("#divSuivant-" + num_pano).css("right", largeurFenetre + 6);
-            dX1 = parseInt(dX + largeurFenetre);
-            if (positionX === "left")
+            dX1 = parseInt(dX) + parseInt(vignettesTailleImage) + 5;
+            if (positionX === "right")
                 $("#barre-" + num_pano).css({right: dX1 + "px"});
+            if (boussole && (boussolePositionX === "right"))
+                $("#boussole-" + num_pano).css(boussolePositionX, (parseInt(boussoleDX) + parseInt(vignettesTailleImage) + 5) + "px");
         }
         if (vignettesPosition === "left") {
             $("#divPrecedent-" + num_pano).css("left", largeurFenetre + 6);
-            dX1 = parseInt(dX + largeurFenetre);
+            dX1 = parseInt(dX) + parseInt(vignettesTailleImage) + 5;
             if (positionX === "left")
                 $("#barre-" + num_pano).css({left: dX1 + "px"});
+            if (boussole && (boussolePositionX === "left"))
+                $("#boussole-" + num_pano).css(boussolePositionX, (parseInt(boussoleDX) + parseInt(vignettesTailleImage) + 5) + "px");
         }
 
     }
@@ -1101,6 +1099,19 @@ function panovisu(num_pano) {
             h1 = $("#barre-" + num_pano).height();
             dX1 = parseInt(dX);
             dY1 = parseInt(dY);
+            if (vignettes)
+            {
+                if ((vignettesPosition === "right") && (positionX === "right")) {
+                    dX1 = parseInt(dX) + parseInt(vignettesTailleImage) + 5;
+                }
+                if ((vignettesPosition === "left") && (positionX === "left")) {
+                    dX1 = parseInt(dX) + parseInt(vignettesTailleImage) + 5;
+                }
+                if ((vignettesPosition === "bottom") && (positionY === "bottom")) {
+                    dY1 = parseInt(dY) + parseInt(vignettesTailleImage) / 2 + 5;
+                }
+            }
+
             switch (positionX) {
                 case "left" :
                     $("#barre-" + num_pano).css({left: dX1 + "px"});
@@ -1123,7 +1134,7 @@ function panovisu(num_pano) {
                     $("#barre-" + num_pano).css({top: posY + "px"});
                     break;
                 case "bottom" :
-                    $("#barre-" + num_pano).css({bottom: dY1 + "px"});
+                    $("#barre-" + num_pano).css({top: -(35 + dY1) + "px"});
                     break;
             }
         }, 200);
@@ -1272,7 +1283,6 @@ function panovisu(num_pano) {
      */
     function init(fenetre) {
         if (boussole) {
-            console.log("test  : " + boussolePositionX + " : " + boussoleDX + "px");
             $("#boussole-" + num_pano).css(boussolePositionX, boussoleDX + "px");
             $("#boussole-" + num_pano).css(boussolePositionY, boussoleDY + "px");
             $("#boussole-" + num_pano).css("opacity", boussoleOpacite);
@@ -1300,7 +1310,6 @@ function panovisu(num_pano) {
         }
         $("#divSuivant-" + num_pano).hide();
         $("#divPrecedent-" + num_pano).hide();
-        console.log("suivant : " + XMLsuivant + " precedent : " + XMLprecedent);
         if (XMLsuivant !== "") {
             $("#divSuivant-" + num_pano).show();
         }
@@ -1308,7 +1317,6 @@ function panovisu(num_pano) {
             $("#divPrecedent-" + num_pano).show();
         }
         if (marcheArret) {
-            console.log("test  : " + marcheArretPositionX + " : " + marcheArretDX + "px");
             $("#marcheArret-" + num_pano).css(marcheArretPositionX, marcheArretDX + "px");
             $("#marcheArret-" + num_pano).css(marcheArretPositionY, marcheArretDY + "px");
             $("#marcheArret-" + num_pano).css({
@@ -1417,7 +1425,6 @@ function panovisu(num_pano) {
 //                alert(nomimage);
                 var img = nomimage.split("/")[2];
                 var img2 = panoImage.split("/")[1];
-                console.log(img + " ==>" + img2);
                 //alert(texture);
                 if (img === img2) {
                     var geometry = new THREE.SphereGeometry(405 - niveau, 50, 50);
@@ -1438,7 +1445,6 @@ function panovisu(num_pano) {
 //                alert(nomimage);
                 var img = nomimage.split("/")[1];
                 var img2 = panoImage.split("/")[1];
-                console.log(img + " ==>" + img2);
                 if (img === img2)
                 {
                     var geometry = new THREE.SphereGeometry(405 - niveau, 50, 50);
@@ -1561,7 +1567,6 @@ function panovisu(num_pano) {
         image.onload = function() {
             var img = path.split("/")[2].split("_")[0];
             var img2 = panoImage.split("/")[1];
-            console.log(img + " ==>" + img2);
             if (img === img2) {
                 texture.image = this;
                 texture.needsUpdate = true;
@@ -1801,7 +1806,6 @@ function panovisu(num_pano) {
                 else {
                     largeurFenetre = $("#pano1-" + num_pano).width() - 15;
                 }
-                console.log("taille :" + largeurFenetre);
                 $("#divVignettes-" + num_pano).css({
                     width: largeurFenetre
                 });
@@ -1809,15 +1813,12 @@ function panovisu(num_pano) {
                     transform: "translate(0px,0px)"
                 });
                 var tailleImages = ((vignettesTailleImage + 10) * vignettesPano.length);
-                console.log(vignettesPano + "tailleImages " + tailleImages + " > " + largeurFenetre + " < " + vignettesTailleImage);
                 if (largeurFenetre < tailleImages) {
-                    console.log("plus petit");
                     $("#gaucheVignettes-" + num_pano).show();
                     $("#droiteVignettes-" + num_pano).show();
                 }
                 else
                 {
-                    console.log("plus grand");
                     $("#gaucheVignettes-" + num_pano).hide();
                     $("#droiteVignettes-" + num_pano).hide();
                 }
@@ -1830,7 +1831,6 @@ function panovisu(num_pano) {
                 else {
                     hauteurFenetre = $("#pano1-" + num_pano).height() - ($("#info-" + num_pano).height() - 10) - 37;
                 }
-                console.log("hauteur :" + hauteurFenetre);
                 $("#divVignettes-" + num_pano).css({
                     height: hauteurFenetre
                 });
@@ -1838,15 +1838,12 @@ function panovisu(num_pano) {
                     transform: "translate(0px,0px)"
                 });
                 var tailleImages = ((vignettesTailleImage / 2 + 5) * vignettesPano.length);
-                console.log(vignettesPano + "tailleImages " + tailleImages + " > " + largeurFenetre + " < " + vignettesTailleImage);
                 if (hauteurFenetre < tailleImages) {
-                    console.log("plus petit");
                     $("#hautVignettes-" + num_pano).show();
                     $("#basVignettes-" + num_pano).show();
                 }
                 else
                 {
-                    console.log("plus grand");
                     $("#hautVignettes-" + num_pano).hide();
                     $("#basVignettes-" + num_pano).hide();
                 }
@@ -2151,7 +2148,6 @@ function panovisu(num_pano) {
                     XMLsuivant = XMLSuivantPrecedent.attr('suivant') || "";
                     XMLprecedent = XMLSuivantPrecedent.attr('precedent') || "";
                     bSuivantPrecedent = (XMLsuivant !== "") || (XMLprecedent !== "");
-                    console.log("Suivant - Précédent : " + bSuivantPrecedent + " => " + XMLsuivant + "," + XMLprecedent);
                     /*
                      * 
                      * 
@@ -2280,9 +2276,6 @@ function panovisu(num_pano) {
                         vignettesPano[i].txt = $(this).attr('texte') || "";
                         i++;
                     });
-                    console.log(vignettesPano);
-
-
 
                     /**
                      * Initialisation de l'interface

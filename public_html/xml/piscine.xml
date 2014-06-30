@@ -36,9 +36,9 @@ and open the template in the editor.
         fs="oui" 
         souris="oui" 
         rotation="oui" 
-        positionX="center"
+        positionX="left"
         positionY="bottom" 
-        dX="0" 
+        dX="10" 
         dY="10"
         visible="oui"
     />
@@ -59,8 +59,8 @@ and open the template in the editor.
         google="oui"
         twitter="oui"
         email="oui"
-        positionX="right"
-        positionY="bottom"
+        positionX="left"
+        positionY="top"
         taille="30"
         dX="10"
         dY="10"   
@@ -84,10 +84,10 @@ and open the template in the editor.
     />     
     <vignettes 
         affiche="oui"
-        tailleImage="120"
+        tailleImage="190"
         fondCouleur="red"
         opacite="1.0"
-        position="bottom"
+        position="right"
     >
         <imageVignette 
             image="panos/piscine1_sphereVignette.jpg"

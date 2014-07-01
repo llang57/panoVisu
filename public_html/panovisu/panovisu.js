@@ -1505,9 +1505,11 @@ function panovisu(num_pano) {
 
                 affiche();
                 afficheInfoTitre();
+                changeTaille();
                 pano1.fadeIn(2000, function() {
                     afficheBarre(pano.width(), pano.height());
                     affiche();
+                    
                 });
                 if (autoRotation === "oui")
                     demarreAutoRotation();
@@ -1550,6 +1552,7 @@ function panovisu(num_pano) {
 
                 affiche();
                 afficheInfoTitre();
+                changeTaille();
                 pano1.fadeIn(2000, function() {
                     afficheBarre(pano.width(), pano.height());
                     affiche();
@@ -1717,9 +1720,10 @@ function panovisu(num_pano) {
             timers = setInterval(function() {
                 rafraichitHS();
             }, 50);
-            $("#info-" + num_pano).fadeIn(2000);
+            //$("#info-" + num_pano).fadeIn(2000);
             pano1.fadeIn(2000, function() {
                 affiche();
+                changeTaille();
             });
             if (autoRotation === "oui")
                 demarreAutoRotation();
@@ -1771,7 +1775,6 @@ function panovisu(num_pano) {
             else {
                 hauteur = fenetreY;
             }
-
             $("#" + fenPanoramique).css({
                 width: largeur + "px",
                 height: hauteur + "px"
@@ -1841,6 +1844,19 @@ function panovisu(num_pano) {
                 if (hauteurFenetre < tailleImages) {
                     $("#hautVignettes-" + num_pano).show();
                     $("#basVignettes-" + num_pano).show();
+                    $("#hautVignettes-" + num_pano).css({
+                        left: 0,
+                        top: 0,
+                        height: 15,
+                        width: vignettesTailleImage + 11
+                    });
+                    $("#basVignettes-" + num_pano).css({
+                        left: 0,
+                        height: 15,
+                        width: vignettesTailleImage + 11,
+                        bottom: 0
+                    });
+                    
                 }
                 else
                 {

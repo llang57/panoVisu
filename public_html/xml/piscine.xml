@@ -22,10 +22,12 @@ and open the template in the editor.
         affInfo="non"
         zeroNord="90"
     />
+    
     <suivantPrecedent
         suivant="xml/beauport.xml"            
         precedent="xml/pontCouvert_1.xml"            
-    />    
+    />   
+     
     <boutons 
         styleBoutons="retinarouge"
         couleur="none"
@@ -42,6 +44,7 @@ and open the template in the editor.
         dY="10"
         visible="oui"
     />
+    
     <boussole 
         affiche="oui"
         image="rose3.png"
@@ -53,6 +56,7 @@ and open the template in the editor.
         dY="10"
         aiguille="oui"
     />
+    
     <reseauxSociaux 
         affiche="oui"
         facebook="oui"
@@ -66,6 +70,7 @@ and open the template in the editor.
         dY="10"   
         opacite="0.8" 
     />
+    
     <marcheArret
         affiche="oui"
         image="MARouge.png"
@@ -81,13 +86,42 @@ and open the template in the editor.
         dX="10"
         dY="10"    
         opacite="0.8" 
-    />     
+    />   
+    
+    <plan
+        affiche="oui" 
+        image="images/planPiscine.jpg"
+        largeur="200"
+        position="right"
+        couleurFond="rgba(255,0,0,0.8)"
+        couleurTexte="yellow"
+        nord="163"
+    >
+        <pointPlan
+            positX="30"
+            positY="110"
+            xml="actif"
+            />  
+        <pointPlan
+            positX="30"
+            positY="50"
+            xml="xml/beauport.xml"
+            texte="l'abbaye maritime de Beauport"
+            />  
+        <pointPlan
+            positX="90"
+            positY="150"
+            xml="xml/pontCouvert.xml"
+            texte="Strasbourg - les Ponts Couverts"
+            />  
+    </plan>
+    
     <vignettes 
         affiche="oui"
         tailleImage="190"
         fondCouleur="red"
         opacite="1.0"
-        position="right"
+        position="bottom"
     >
         <imageVignette 
             image="panos/piscine1_sphereVignette.jpg"
@@ -118,6 +152,7 @@ and open the template in the editor.
             xml="xml/beauport.xml"
         />
     </vignettes>  
+    
     <hotspots>
         <point
             type="panoramique"

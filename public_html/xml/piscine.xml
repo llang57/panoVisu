@@ -96,6 +96,9 @@ and open the template in the editor.
         couleurFond="rgba(255,0,0,0.8)"
         couleurTexte="yellow"
         nord="163"
+        boussolePosition="top:right"
+        boussoleX="0"
+        boussoleY="10"
     >
         <pointPlan
             positX="30"

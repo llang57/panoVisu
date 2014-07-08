@@ -206,7 +206,10 @@ function panovisu(num_pano) {
             planPosition,
             planCouleurFond,
             planCouleurTexte,
-            planNord;
+            planNord,
+            planBoussolePosition,
+            planBoussoleX,
+            planBoussoleY;
 
 
     /**
@@ -1514,14 +1517,19 @@ function panovisu(num_pano) {
             $("#plan-" + num_pano).css(planPosition, "0px");
             $("#plan-" + num_pano).css({backgroundColor: planCouleurFond, padding: "10px", top: "0px"});
             $("<img>", {id: "planAig-" + num_pano, class: "planAig", src: "panovisu/images/plan/aiguillePlan.png"}).appendTo("#plan-" + num_pano);
+            bousX = planBoussolePosition.split(":")[1];
+            bousY = planBoussolePosition.split(":")[0];
+            $("#planAig-" + num_pano).css(bousY, parseInt(planBoussoleY + 10) + "px");
+            imageObj = new Image();
+
+            imageObj.src = "panovisu/images/plan/aiguillePlan.png";
+            $("#planAig-" + num_pano).css(bousX, parseInt(planBoussoleX + 10
+                    + imageObj.height / 2) + "px");
             $("#planAig-" + num_pano).css({
-                right: "30px",
-                top: "10px",
                 transform: "rotate(" + planNord + "deg)"
             });
             $("<img>", {id: "planImg-" + num_pano, class: "planImg", src: planImage, width: planLargeur}).appendTo("#plan-" + num_pano);
             var positPlan = $("#info-" + num_pano).height() + 10;
-            console.log($("#plan-" + num_pano).height());
             $("#plan-" + num_pano).css("top", positPlan);
             $("#plan-" + num_pano).show();
             $("<div>", {id: "planTitre-" + num_pano, class: "planTitre"}).appendTo("#pano1-" + num_pano);
@@ -1542,9 +1550,7 @@ function panovisu(num_pano) {
                 $("#planTitre-" + num_pano).css(planPosition, $("#planImg-" + num_pano).width() + 20 - $("#planTitre-" + num_pano).width()
                         - parseInt($("#planTitre-" + num_pano).css("paddingLeft")) + "px");
             }
-            console.log("nombre de points : " + pointsPlan.length);
             for (var i = 0; i < pointsPlan.length; i++) {
-                console.log(i + " ==> " + pointsPlan[i].xml);
                 if (pointsPlan[i].xml === "actif") {
                     $("<img>", {id: "planPt-" + i + "-" + num_pano, class: "planPoint actif", src: "panovisu/images/plan/pointActif.png", width: "15"}).appendTo("#plan-" + num_pano);
                 }
@@ -2298,6 +2304,9 @@ function panovisu(num_pano) {
                     planPosition = "left";
                     planCouleurFond = "rgba(0,0,0,0.5)";
                     planCouleurTexte = "white";
+                    planBoussolePosition = "top:right";
+                    planBoussoleX = 0;
+                    planBoussoleY = 0;
                     $("#divVignettes-" + num_pano).html("");
                     $("<img>", {id: "gaucheVignettes-" + num_pano, class: "positionVignettes", src: "panovisu/images/interface/gauche.jpg"}).appendTo("#divVignettes-" + num_pano);
                     $("<img>", {id: "droiteVignettes-" + num_pano, class: "positionVignettes", src: "panovisu/images/interface/droite.jpg"}).appendTo("#divVignettes-" + num_pano);
@@ -2479,7 +2488,9 @@ function panovisu(num_pano) {
                     planCouleurTexte = XMLPlan.attr("couleurTexte") || planCouleurTexte;
                     planLargeur = parseFloat(XMLPlan.attr('largeur')) || planLargeur;
                     planNord = parseFloat(XMLPlan.attr('nord')) || planNord;
-
+                    planBoussolePosition = XMLPlan.attr('boussolePosition') || planBoussolePosition;
+                    planBoussoleX = parseInt(XMLPlan.attr('boussoleX')) || planBoussoleX;
+                    planBoussoleY = parseInt(XMLPlan.attr('boussoleY')) || planBoussoleY;
 
                     /*
                      *   vignettes des panoramiques
@@ -2491,7 +2502,6 @@ function panovisu(num_pano) {
                         pointsPlan[i].texte = $(this).attr('texte') || "";
                         pointsPlan[i].positX = parseInt($(this).attr('positX')) || 0;
                         pointsPlan[i].positY = parseInt($(this).attr('positY')) || 0;
-                        console.log("i : " + i + "  " + pointsPlan[i].xml + " ==> " + pointsPlan[i].positX + "," + pointsPlan[i].positY);
                         i++;
                     });
 
@@ -2620,7 +2630,7 @@ function panovisu(num_pano) {
             fenX: "75%",
             fenY: "80%",
             panoramique: "panovisu",
-            minFOV: 25,
+            minFOV: 35,
             maxFOV: 120
         };
         contexte = $.extend(defaut, contexte);

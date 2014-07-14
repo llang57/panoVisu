@@ -20,7 +20,7 @@ and open the template in the editor.
         nombreNiveaux="2"
         type="cube"
         affInfo="non"
-        zeroNord="90"
+        zeroNord="-140"
     />
     
     <suivantPrecedent
@@ -95,7 +95,7 @@ and open the template in the editor.
         position="right"
         couleurFond="rgba(255,0,0,0.8)"
         couleurTexte="yellow"
-        nord="163"
+        nord="168.57"
         boussolePosition="top:right"
         boussoleX="0"
         boussoleY="10"

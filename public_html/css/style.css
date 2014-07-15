@@ -149,7 +149,7 @@ p{
 
 
 #pano{
-    padding: 6px;
+    margin: 6px;
     border : 1px solid #aaa;
     border-radius: 3px;
     width:40%;
@@ -161,7 +161,7 @@ p{
     overflow: hidden;
 }
 #test,#pano2{
-    padding: 6px;
+    margin: 6px;
     border : 1px solid #aaa;
     border-radius: 3px;
     width:40%;

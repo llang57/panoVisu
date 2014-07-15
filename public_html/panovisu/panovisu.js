@@ -60,7 +60,6 @@ function panovisu(num_pano) {
 
     var timer,
             webGL = true,
-            tailleRadar = 50,
             positXRadar,
             positYRadar,
             maxTextureSize,
@@ -214,7 +213,13 @@ function panovisu(num_pano) {
             planNord,
             planBoussolePosition,
             planBoussoleX,
-            planBoussoleY;
+            planBoussoleY,
+            radarAffiche,
+            radarTaille,
+            radarOpacite,
+            radarCouleurFond,
+            radarCouleurLigne
+            ;
 
 
     /**
@@ -1045,6 +1050,7 @@ function panovisu(num_pano) {
         target.y = 500 * Math.cos(phi);
         target.z = 500 * Math.sin(phi) * Math.sin(theta);
         camera.lookAt(target);
+//        camera.position.copy(target).negate();
         renderer.render(scene, camera);
         var bouss = longitude - zeroNord;
         if (boussoleAiguille === "oui")
@@ -1055,39 +1061,31 @@ function panovisu(num_pano) {
             $("#bousImg-" + num_pano).css({transform: "rotate(" + (-bouss) + "deg)"});
 
         }
-        
-        largRadar = tailleRadar * Math.tan(fov / 180 * Math.PI / 2);
-        hautRadar=tailleRadar;
-        console.log("largeur : "+largRadar+" hauteur : "+hautRadar+" "+tailleRadar);
-        if (largRadar>tailleRadar){
-            hautRadar=tailleRadar/Math.tan(fov / 180 * Math.PI / 2);
-            largRadar=tailleRadar;
+        if (planAffiche && radarAffiche) {
+            angleRadar = fov / 180 * Math.PI / 2;
+            var canvas = document.getElementById("radar-" + num_pano);
+            if (canvas.getContext)
+            {
+                var ctx = canvas.getContext("2d");
+                ctx.clearRect(0, 0, radarTaille * 2, radarTaille * 2);
+                ctx.fillStyle = radarCouleurFond;
+                ctx.strokeStyle = radarCouleurLigne;
+                ctx.strokeWidth = 1;
+                ctx.beginPath();
+                ctx.moveTo(radarTaille, radarTaille);
+                ctx.arc(radarTaille, radarTaille, radarTaille, -angleRadar, angleRadar, false);
+                ctx.lineTo(radarTaille, radarTaille);
+                ctx.closePath();
+                ctx.fill();
+                ctx.stroke();
+            }
+            angleRadar = longitude - zeroNord + planNord - 90;
+
+            $("#radar-" + num_pano).css({
+                transform: "rotate(" + angleRadar + "deg)"
+            });
+
         }
-        console.log("largeur : "+largRadar+" hauteur : "+hautRadar+" "+tailleRadar);
-
-        var canvas = document.getElementById("radar-" + num_pano);
-        if (canvas.getContext)
-        {
-            var ctx = canvas.getContext("2d");
-            canvas.width = canvas.width;
-            ctx.fillStyle = "rgba(180,180,180,0.6)";
-            ctx.strokeStyle="yellow";
-            ctx.lineWidth=1;
-            ctx.stroke();
-            ctx.beginPath();
-            ctx.moveTo(tailleRadar , tailleRadar);
-            ctx.lineTo(tailleRadar  - largRadar, tailleRadar-hautRadar);
-            ctx.lineTo(tailleRadar  + largRadar, tailleRadar-hautRadar);
-            ctx.closePath();
-            ctx.fill();
-        }
-        angleRadar = longitude - zeroNord + planNord;
-
-        $("#radar-" + num_pano).css({
-            transform: "rotate(" + angleRadar + "deg)"
-        });
-
-
     }
 //    $(document).on("click", "#divImage-" + num_pano, function() {
 //        $("#divImage-" + num_pano).animate({opacity: 0.01}, 10, function() {
@@ -1599,35 +1597,41 @@ function panovisu(num_pano) {
                 $("#planTitre-" + num_pano).css(planPosition, $("#planImg-" + num_pano).width() + 20 - $("#planTitre-" + num_pano).width()
                         - parseInt($("#planTitre-" + num_pano).css("paddingLeft")) + "px");
             }
-            $("#radar-" + num_pano).attr("width", 2*tailleRadar);
-            $("#radar-" + num_pano).attr("height", tailleRadar);
-            $("#radar-" + num_pano).css({transformOrigin: "50% 100%"});
-            var largRadar = tailleRadar * Math.tan(fov / 180 * Math.PI / 2);
+            $("#radar-" + num_pano).attr("width", 2 * radarTaille);
+            $("#radar-" + num_pano).attr("height", 2 * radarTaille);
+            $("#radar-" + num_pano).css({transformOrigin: "50% 50%"});
+            var angleRadar = fov / 180 * Math.PI / 2;
+            $("#radar-" + num_pano).css({opacity: radarOpacite});
+            if (radarAffiche) {
+                var canvas = document.getElementById("radar-" + num_pano);
 
-            var canvas = document.getElementById("radar-" + num_pano);
-            if (canvas.getContext)
-            {
-                var ctx = canvas.getContext("2d");
-                ctx.fillStyle = "rgba(200,0,0,0.6)";
-                ctx.beginPath();
-                ctx.moveTo(tailleRadar / 2, tailleRadar);
-                ctx.lineTo(tailleRadar / 2 - largRadar, 0);
-                ctx.lineTo(tailleRadar / 2 + largRadar, 0);
-                ctx.closePath();
-                ctx.fill();
+                if (canvas.getContext)
+                {
+                    var ctx = canvas.getContext("2d");
+                    ctx.fillStyle = radarCouleurFond;
+                    ctx.strokeStyle = radarCouleurLigne;
+                    ctx.beginPath();
+                    ctx.moveTo(radarTaille, radarTaille);
+                    ctx.arc(radarTaille, radarTaille, radarTaille, -angleRadar, angleRadar, false);
+                    ctx.lineTo(radarTaille, radarTaille);
+                    ctx.closePath();
+                    ctx.fill();
+                    ctx.stroke();
+                }
+                angleRadar = longitude - zeroNord + planNord;
             }
-            angleRadar = longitude - zeroNord + planNord;
-
             for (var i = 0; i < pointsPlan.length; i++) {
                 if (pointsPlan[i].xml === "actif") {
                     $("<img>", {id: "planPt-" + i + "-" + num_pano, class: "planPoint actif", src: "panovisu/images/plan/pointActif.png", width: "12"}).appendTo("#plan-" + num_pano);
-                    positXRadar = pointsPlan[i].positX - tailleRadar  + 10;
-                    positYRadar = (pointsPlan[i].positY - tailleRadar + 10);
-                    $("#radar-" + num_pano).css({
-                        top: positYRadar,
-                        left: positXRadar,
-                        transform: "rotate(" + angleRadar + "deg)"
-                    });
+                    if (radarAffiche) {
+                        positXRadar = pointsPlan[i].positX - radarTaille + 10;
+                        positYRadar = (pointsPlan[i].positY - radarTaille + 10);
+                        $("#radar-" + num_pano).css({
+                            top: positYRadar,
+                            left: positXRadar,
+                            transform: "rotate(" + angleRadar + "deg)"
+                        });
+                    }
 
                 }
                 else {
@@ -1664,6 +1668,11 @@ function panovisu(num_pano) {
                         var mesh1 = new THREE.Mesh(geometry, material);
                         mesh1.scale.x = -1;
                         scene.add(mesh1);
+                        for (var i = 0, l = mesh1.geometry.vertices.length; i < l; i++) {
+                            var vertex = mesh1.geometry.vertices[ i ];
+                            vertex.normalize();
+                            vertex.multiplyScalar(550 - niveau);
+                        }
                         niveau += 1;
                         afficheNiveauSphere(image, niveau);
                         affiche();
@@ -1691,6 +1700,14 @@ function panovisu(num_pano) {
                         var meshF = new THREE.Mesh(geometry, material);
                         meshF.scale.x = -1;
                         scene.add(meshF);
+                        for (var i = 0, l = meshF.geometry.vertices.length; i < l; i++) {
+
+                            var vertex = meshF.geometry.vertices[ i ];
+
+                            vertex.normalize();
+                            vertex.multiplyScalar(545);
+
+                        }
                         affiche();
                     }
                 }
@@ -1740,6 +1757,14 @@ function panovisu(num_pano) {
                 mesh = new THREE.Mesh(geometry, material);
                 mesh.scale.x = -1;
                 scene.add(mesh);
+                for (var i = 0, l = mesh.geometry.vertices.length; i < l; i++) {
+
+                    var vertex = mesh.geometry.vertices[ i ];
+
+                    vertex.normalize();
+                    vertex.multiplyScalar(550);
+
+                }
                 afficheNiveauSphere(panoImage, 1);
                 renderer.setSize(pano.width(), pano.height());
                 container.append(renderer.domElement);
@@ -1798,6 +1823,14 @@ function panovisu(num_pano) {
                 mesh = new THREE.Mesh(geometry, material);
                 mesh.scale.x = -1;
                 scene.add(mesh);
+                for (var i = 0, l = mesh.geometry.vertices.length; i < l; i++) {
+
+                    var vertex = mesh.geometry.vertices[ i ];
+
+                    vertex.normalize();
+                    vertex.multiplyScalar(550);
+
+                }
                 renderer.setSize(pano.width(), pano.height());
                 container.append(renderer.domElement);
                 for (var i = 0; i < pointsInteret.length; i++)
@@ -1857,6 +1890,11 @@ function panovisu(num_pano) {
                         var mesh1 = new THREE.Mesh(new THREE.CubeGeometry(405 - niveau, 405 - niveau, 405 - niveau, 10, 10, 10), new THREE.MeshFaceMaterial(materials1));
                         mesh1.scale.x = -1;
                         scene.add(mesh1);
+                        for (var i = 0, l = mesh1.geometry.vertices.length; i < l; i++) {
+                            var vertex = mesh1.geometry.vertices[ i ];
+                            vertex.normalize();
+                            vertex.multiplyScalar(550 - niveau);
+                        }
                         affiche();
                     }
                     else {
@@ -1872,6 +1910,12 @@ function panovisu(num_pano) {
                         var meshF = new THREE.Mesh(new THREE.CubeGeometry(395, 395, 395, 10, 10, 10), new THREE.MeshFaceMaterial(materials));
                         meshF.scale.x = -1;
                         scene.add(meshF);
+                        for (var i = 0, l = meshF.geometry.vertices.length; i < l; i++) {
+                            var vertex = meshF.geometry.vertices[ i ];
+                            vertex.normalize();
+                            vertex.multiplyScalar(550 - niveau);
+                        }
+
                         affiche();
                     }
 
@@ -1969,6 +2013,12 @@ function panovisu(num_pano) {
         mesh = new THREE.Mesh(new THREE.CubeGeometry(405, 405, 405, 10, 10, 10), new THREE.MeshFaceMaterial(materials));
         mesh.scale.x = -1;
         scene.add(mesh);
+        for (var i = 0, l = mesh.geometry.vertices.length; i < l; i++) {
+            var vertex = mesh.geometry.vertices[ i ];
+            vertex.normalize();
+            vertex.multiplyScalar(550);
+        }
+
         renderer.setSize(pano.width(), pano.height());
         container.append(renderer.domElement);
         setTimeout(function() {
@@ -2398,6 +2448,11 @@ function panovisu(num_pano) {
                     planBoussolePosition = "top:right";
                     planBoussoleX = 0;
                     planBoussoleY = 0;
+                    radarTaille = 50;
+                    radarOpacite = 0.6;
+                    radarCouleurFond = "rgb(128,128,128)";
+                    radarCouleurLigne = "rgb(200,200,0)";
+                    radarAffiche = false;
                     $("#divVignettes-" + num_pano).html("");
                     $("<img>", {id: "gaucheVignettes-" + num_pano, class: "positionVignettes", src: "panovisu/images/interface/gauche.jpg"}).appendTo("#divVignettes-" + num_pano);
                     $("<img>", {id: "droiteVignettes-" + num_pano, class: "positionVignettes", src: "panovisu/images/interface/droite.jpg"}).appendTo("#divVignettes-" + num_pano);
@@ -2583,6 +2638,12 @@ function panovisu(num_pano) {
                     planBoussolePosition = XMLPlan.attr('boussolePosition') || planBoussolePosition;
                     planBoussoleX = parseInt(XMLPlan.attr('boussoleX')) || planBoussoleX;
                     planBoussoleY = parseInt(XMLPlan.attr('boussoleY')) || planBoussoleY;
+                    afficheRadar = XMLPlan.attr('radarAffiche') || "non";
+                    radarTaille = parseInt(XMLPlan.attr('radarTaille')) || radarTaille;
+                    radarOpacite = parseFloat(XMLPlan.attr('radarOpacite')) || radarOpacite;
+                    radarCouleurFond = XMLPlan.attr('radarCouleurFond') || radarCouleurFond;
+                    radarCouleurLigne = XMLPlan.attr('radarCouleurLigne') || radarCouleurLigne;
+                    radarAffiche = (afficheRadar === "oui");
 
                     /*
                      *   vignettes des panoramiques

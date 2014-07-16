@@ -49,11 +49,11 @@ and open the template in the editor.
         affiche="oui"
         image="rose3.png"
         taille="60"
-        positionY="bottom"
-        positionX="right"
+        positionY="top"
+        positionX="left"
         opacite="0.5"
         dX="10"
-        dY="10"
+        dY="50"
         aiguille="oui"
     />
     
@@ -92,7 +92,7 @@ and open the template in the editor.
         affiche="oui" 
         image="images/planPiscine.jpg"
         largeur="200"
-        position="right"
+        position="right" 
         couleurFond="rgba(255,0,0,0.8)"
         couleurTexte="yellow"
         nord="168.57"
@@ -128,8 +128,9 @@ and open the template in the editor.
         affiche="oui"
         tailleImage="190"
         fondCouleur="red"
+        texteCouleur="yellow"
         opacite="1.0"
-        position="bottom"
+        position="left"
     >
         <imageVignette 
             image="panos/piscine1_sphereVignette.jpg"

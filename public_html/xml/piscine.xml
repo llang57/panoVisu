@@ -33,7 +33,7 @@ and open the template in the editor.
         couleur="none"
         bordure="none"
         deplacements="oui" 
-        zoom="non" 
+        zoom="oui" 
         outils="oui"
         fs="oui" 
         souris="oui" 

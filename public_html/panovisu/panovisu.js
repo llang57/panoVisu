@@ -1,7 +1,7 @@
 /**
  * @name panoVisu
  * 
- * @version 0.90
+ * @version 1.0.21
  * @author LANG Laurent
  */
 
@@ -377,9 +377,11 @@ function panovisu(num_pano) {
                     if (object.id === hotSpot[i].id) {
                         haut = Y - 5;
                         gauche = X + 20;
-                        (pointsInteret[i].info !== "") ? $("#infoBulle-" + num_pano).html(pointsInteret[i].info) : $("#infoBulle-" + num_pano).html(pointsInteret[i].contenu);
-                        $("#infoBulle-" + num_pano).css({top: haut + "px", left: gauche + "px"});
-                        $("#infoBulle-" + num_pano).show();
+                        if (pointsInteret[i].info !== "") {
+                            $("#infoBulle-" + num_pano).html(pointsInteret[i].info);
+                            $("#infoBulle-" + num_pano).css({top: haut + "px", left: gauche + "px"});
+                            $("#infoBulle-" + num_pano).show();
+                        }
                     }
 
                 }
@@ -863,13 +865,13 @@ function panovisu(num_pano) {
                         $("#divSuivant-" + num_pano).css({right: largeur});
                     }
                 }
-                else{
+                else {
                     if (vignettesPosition === "left") {
                         $("#divPrecedent-" + num_pano).css({left: 0});
                     }
                     if (vignettesPosition === "right") {
                         $("#divSuivant-" + num_pano).css({right: 0});
-                    }                    
+                    }
                 }
 
             }
@@ -1918,7 +1920,7 @@ function panovisu(num_pano) {
             $("#reseauxSociaux-" + num_pano).css(reseauxSociauxPositionX, reseauxSociauxDX + "px");
             $("#reseauxSociaux-" + num_pano).css(reseauxSociauxPositionY, reseauxSociauxDY + "px");
             $("#reseauxSociaux-" + num_pano).css({
-                width: (reseauxSociauxTaille + 5) * 4 + "px",
+                width: (reseauxSociauxTaille + 30) * 4 + "px",
                 height: reseauxSociauxTaille + "px"
             });
             $("#reseauxSociaux-" + num_pano).css("opacity", reseauxSociauxOpacite);
@@ -3005,8 +3007,8 @@ function panovisu(num_pano) {
                     reseauxSociauxOpacite = 0.8;
                     reseauxSociauxPositionX = "left";
                     reseauxSociauxPositionY = "bottom";
-                    reseauxSociauxDX = 10;
-                    reseauxSociauxDY = 10;
+                    reseauxSociauxDX = 0;
+                    reseauxSociauxDY = 0;
                     reseauxSociauxTaille = 30;
                     reseauxSociauxTwitter = "non";
                     reseauxSociauxFacebook = "non";

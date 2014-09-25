@@ -27,11 +27,23 @@ and open the template in the editor.
         suivant="xml/beauport.xml"            
         precedent="xml/pontCouvert_1.xml"            
     />   
-     
+    <!--  MenuContextuel -->
+    <menuContextuel 
+        affiche="oui"
+        precSuiv="oui"
+        planete="oui"
+        pers1="oui"
+        lib1="Test de menu"
+        url1="http://lemondea360.fr/visite"
+        pers2="non"
+        lib2=""
+        url2=""
+    />
+    
     <boutons 
         styleBoutons="retinarouge"
-        couleur="none"
-        bordure="none"
+        couleur="rgba(255,255,255,0)"
+        bordure="rgba(255,255,255,0)"
         deplacements="oui" 
         zoom="oui" 
         outils="oui"
@@ -44,6 +56,32 @@ and open the template in the editor.
         dY="10"
         visible="oui"
     />
+    
+    <telecommande
+        fs="oui" 
+        souris="oui" 
+        rotation="oui" 
+        info="oui"
+        aide="oui"
+        positionX="right"
+        positionY="bottom" 
+        tailleBouton="40"
+        dX="10" 
+        dY="10"
+        taille="40"
+        visible="oui">
+        <zoneNavPerso id="telZoomMoins" alt="" title="" shape="poly" coords="68,189,184,189,179,211,161,234,137,242,107,242,84,224,71,202" />
+        <zoneNavPerso id="telZoomPlus" alt="" title="" shape="poly" coords="68,184,185,182,177,153,158,133,127,127,98,136,81,153,72,169" />
+        <zoneNavPerso id="telRight" alt="" title="" shape="poly" coords="178,227,220,271,242,241,255,199,253,162,240,127,221,99,178,141,192,167,192,197" />
+        <zoneNavPerso id="telDown" alt="" title="" shape="poly" coords="84,234,112,251,145,250,175,233,213,278,182,301,149,311,114,312,77,303,42,280" />
+        <zoneNavPerso id="telLeft" alt="" title="" shape="poly" coords="34,99,79,142,63,171,62,202,77,228,36,276,9,235,0,173,16,123" />
+        <zoneNavPerso id="telUp" alt="" title="" shape="poly" coords="84,132,43,91,77,68,123,57,163,61,195,76,214,89,174,134,147,121,115,119" />
+        <zoneNavPerso id="area-2" alt="" title="" shape="circle" coords="197,346,23" />
+        <zoneNavPerso id="area-1" alt="" title="" shape="circle" coords="60,346,24" />
+        <zoneNavPerso id="area-5" alt="" title="" shape="circle" coords="222,24,24" />
+        <zoneNavPerso id="area-4" alt="" title="" shape="circle" coords="128,24,24" />
+        <zoneNavPerso id="area-3" alt="" title="" shape="circle" coords="33,24,24" />
+    </telecommande>
     
     <boussole 
         affiche="oui"
@@ -87,7 +125,7 @@ and open the template in the editor.
         dY="10"    
         opacite="0.8" 
     />   
-    
+    <!--    
     <plan
         affiche="oui" 
         image="images/planPiscine.jpg"
@@ -123,7 +161,7 @@ and open the template in the editor.
             texte="Strasbourg - les Ponts Couverts"
             />  
     </plan>
-    
+    -->
     <vignettes 
         affiche="oui"
         tailleImage="190"
@@ -131,6 +169,7 @@ and open the template in the editor.
         texteCouleur="yellow"
         opacite="1.0"
         position="left"
+        offsetBas="60px"
     >
         <imageVignette 
             image="panos/piscine1_sphereVignette.jpg"
@@ -161,6 +200,126 @@ and open the template in the editor.
             xml="xml/beauport.xml"
         />
     </vignettes>  
+    
+<!--    <comboMenu 
+        affiche="oui"
+        positionX="right"
+        positionY="top"
+        dX="10"
+        dY="60"
+    >
+        <imageComboMenu 
+            titre="Beauport"
+            sousTitre="visite Test"
+            xml="xml/beauport.xml"
+        />
+        <imageComboMenu 
+            titre="Ponts Couverts"
+            sousTitre="visite Test"
+            xml="xml/pontCouvert.xml"
+        />
+        <imageComboMenu 
+            titre="Ponts Couverts 2"
+            sousTitre="visite Test"
+            xml="xml/pontCouvert_1.xml"
+            selectionne="selected"
+        />
+        <imageComboMenu 
+            titre="Images Test"
+            sousTitre="visite Test"
+            xml="xml/panovisu.xml"
+        />
+        <imageComboMenu 
+            titre="Ponts Couverts 2"
+            sousTitre="visite Test"
+            xml="xml/pontCouvert_1.xml"
+        />
+        <imageComboMenu 
+            titre="Ponts Couverts"
+            sousTitre="visite Test"
+            xml="xml/pontCouvert.xml"
+        />
+        <imageComboMenu 
+            titre="Abbaye Maritime de Beauport"
+            sousTitre="visite Test"
+            xml="xml/beauport.xml"
+        />
+    </comboMenu>  -->
+
+    <comboMenu 
+        affiche="oui"
+        positionX="right"
+        positionY="top"
+        dX="10"
+        dY="60"
+    >
+        <imageComboMenu 
+            titre="Beauport"
+            sousTitre="visite Test"
+            image="panos/piscine1_sphereVignette.jpg"
+            xml="xml/beauport.xml"
+        />
+        <imageComboMenu 
+            titre="Ponts Couverts"
+            sousTitre="visite Test"
+            image="panos/piscine2_sphereVignette.jpg"
+            xml="xml/pontCouvert.xml"
+        />
+        <imageComboMenu 
+            titre="Ponts Couverts 2"
+            sousTitre="visite Test"
+            image="panos/piscine3_sphereVignette.jpg"
+            xml="xml/pontCouvert_1.xml"
+            selected="oui"
+        />
+        <imageComboMenu 
+            titre="Images Test"
+            sousTitre="visite Test"
+            image="panos/piscine4_sphereVignette.jpg"
+            xml="xml/panovisu.xml"
+        />
+        <imageComboMenu 
+            titre="Ponts Couverts 2"
+            sousTitre="visite Test"
+            image="panos/piscine5_sphereVignette.jpg"
+            xml="xml/pontCouvert_1.xml"
+        />
+        <imageComboMenu 
+            titre="Ponts Couverts"
+            sousTitre="visite Test"
+            image="panos/piscine6_sphereVignette.jpg"
+            xml="xml/pontCouvert.xml"
+        />
+        <imageComboMenu 
+            titre="Abbaye Maritime de Beauport"
+            sousTitre="visite Test"
+            image="panos/piscine7_sphereVignette.jpg"
+            xml="xml/beauport.xml"
+        />
+    </comboMenu>  
+
+
+    <imageFond
+        fichier="images/home.png"
+        posX="left"
+        posY="bottom"
+        offsetX="10"
+        offsetY="10"
+        tailleX="90"
+        tailleY="90"
+        opacite="0.8"
+        url="http://lemondea360.fr/galphoto"
+    />
+    
+    <imageFond
+        fichier="images/home1.png"
+        posX="left"
+        posY="middle"
+        offsetX="0"
+        offsetY="60"
+        opacite="1.0"
+        url="http://lemondea360.fr/gal360"
+    />
     
     <hotspots>
         <point

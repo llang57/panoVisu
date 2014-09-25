@@ -100,7 +100,7 @@ and open the template in the editor.
     margin: auto;
     text-align: center;
     height: 0;
-    position: relative;
+    position: absolute;
     /*bottom: 40px;*/
 }
 
@@ -113,15 +113,17 @@ and open the template in the editor.
     position: absolute;
     top: -45px;
     transition: 0.5s;    
+    padding : 1px;
 }
 .barre button{
     height: 40px;
     width: 40px;
     border: 1px solid rgba(255,255,255,0);
     background-color: rgba(255,255,255,0);
-    border-radius: 3px;
+    border-radius: 0px;
     opacity: 0.8;
-    margin-right: 3px;
+    margin-right: 0px;
+    padding : 1px;
 }
 
 .info {
@@ -165,6 +167,7 @@ and open the template in the editor.
     color: #fff;
     text-align: center;
     display: none;
+    overflow: hidden;
 
 }
 
@@ -298,6 +301,7 @@ and open the template in the editor.
 .plan,.planTitre,.planPoint{
     position: absolute;
     transition:ease-in-out 1s;
+    z-index: 500;
 }
 .plan{
     overflow: hidden;
@@ -314,4 +318,83 @@ and open the template in the editor.
 
 .radar{
     position: absolute;
+}
+.data-title{
+    margin: 10px;
+    border-left: 1px solid #999;
+    font-size: 0.8em;
+}
+
+.data-title:before {
+    content: attr(data-menutitle);
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    background-color: #444;
+    color : #fff;
+    padding: 2px;
+    text-align: center;
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+    font-size: 0.6em;;
+    font-weight: bold;
+}
+.data-title :first-child {
+    margin-top: 20px;
+}
+.imgFond{
+    position: absolute;
+    transition: 0.5s;
+    z-index: 200;
+}    
+.hotSpots{
+    position: absolute;
+    z-index: 100;
+    cursor: pointer;
+}
+.telecommande{
+    z-index : 10000;
+    position: absolute;
+    bottom: 100px;
+    right : 10px;
+    display: inline-block;
+}
+.imgTelec{
+    position : absolute;
+    top : 0px;
+}
+.imgTelecInfo:hover{
+    cursor: pointer;
+}
+
+.imgTelecInfo{
+    position: absolute;
+    width: 50px;
+    height: 50px;
+}
+
+
+.imgTelecFS:hover{
+    cursor: pointer;
+}
+
+.imgTelecFS{
+    position: absolute;
+    width: 50px;
+    height: 50px;
+}
+.clicTelec:hover{
+    cursor: pointer;
+}
+.comboMenu{
+    z-index : 10000;
+    position: absolute;
+    width: 300px;
+    font-family: Verdana,Arial,sans-serif;
+    font-size: 0.7em;
+}
+.comboMenu img{
+    width: 80px;
+    height : 40px;
 }

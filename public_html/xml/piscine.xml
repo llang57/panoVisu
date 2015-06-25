@@ -8,7 +8,7 @@ and open the template in the editor.
 
 <scene>
     <pano 
-        image="panos/piscine" 
+        image="panos/piscine4" 
         titre="La piscine Roubaix - Le bassin" 
         titrePolice="Segoe Print"
         titreTaillePolice="16pt"
@@ -17,8 +17,9 @@ and open the template in the editor.
         titreFond="red"
         titreOpacite="0.7"
         multiReso="oui"
-        nombreNiveaux="2"
-        type="cube"
+        nombreNiveaux="1"
+        nombreFinal="2"
+        type="sphere"
         affInfo="non"
         zeroNord="-140"
     />
@@ -375,6 +376,8 @@ and open the template in the editor.
             image="panovisu/images/hotspots/home.png"
             info="Le monde à 360°"
             anime="false"
+            taille="800px"
+            position="right"
         />
         <point
             type="html"

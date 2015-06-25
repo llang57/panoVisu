@@ -8,6 +8,12 @@
         <link rel="stylesheet" media="screen" href="css/style.css" type="text/css"/>
         <link rel="stylesheet" media="screen" href="panovisu/libs/jqueryMenu/jquery.contextMenu.css" type="text/css"/>
         <link rel="stylesheet" type="text/css" href="panovisu/css/msdropdown/dd.css" />
+        <style>
+            a{
+                color: black;
+                cursor: pointer;
+            }
+        </style>
     </head>
     <body>
 
@@ -31,6 +37,17 @@
                 <header>1.Au début ...</header>
                 <div id="pano2">
                 </div>
+                <br/>
+                <br/>
+                <a style="color : black;cursor: pointer;"  onclick="chargeBeauport();">beauport</a>
+                <input type="button" onclick="pano1.setLongitude(pano1.getLongitude()- 1 );" value="<"/> 
+                <input type="button" onclick="pano1.setLatitude(pano1.getLatitude() + 1);" value="^"/>
+                <input type="button" onclick="pano1.setLatitude(pano1.getLatitude() - 1)();" value="v"> 
+                <input type="button" onclick="pano1.setLongitude(pano1.getLongitude() + 1);" value=">">
+                <input type="button" onclick="pano1.setFOV(pano1.getFOV() - 1);" value="+">
+                <input type="button" onclick="pano1.setFOV(pano1.getFOV() + 1);" value="-">
+                
+                <div style="position: absolute;right: 15%;"><input type="button" onclick="pano1.allerAuPoint(100,-10);" value="aller à 100,-10" /></div>
                 <p>Alios autem dicere aiunt multo etiam inhumanius (quem locum breviter paulo ante perstrinxi) praesidii adiumentique causa, non benevolentiae neque caritatis, amicitias esse expetendas; itaque, ut quisque minimum firmitatis haberet minimumque virium, ita amicitias appetere maxime; ex eo fieri ut mulierculae magis amicitiarum praesidia quaerant quam viri et inopes quam opulenti et calamitosi quam ii qui putentur beati.</p>
                 <p>Quaestione igitur per multiplices dilatata fortunas cum ambigerentur quaedam, non nulla levius actitata constaret, post multorum clades Apollinares ambo pater et filius in exilium acti cum ad locum Crateras nomine pervenissent, villam scilicet suam quae ab Antiochia vicensimo et quarto disiungitur lapide, ut mandatum est, fractis cruribus occiduntur.</p>
                 <p>Nec piget dicere avide magis hanc insulam populum Romanum invasisse quam iuste. Ptolomaeo enim rege foederato nobis et socio ob aerarii nostri angustias iusso sine ulla culpa proscribi ideoque hausto veneno voluntaria morte deleto et tributaria facta est et velut hostiles eius exuviae classi inpositae in urbem advectae sunt per Catonem, nunc repetetur ordo gestorum.</p>
@@ -63,7 +80,16 @@
             <script src="panovisu/panovisuInit.js"></script>
             <script src="panovisu/panovisu.js"></script>
             <script>
-                $(function() {
+                    var pano1;
+                    function chargeBeauport() {
+                        pano1.setPano("xml/beauport.xml");
+                        requestTimeout(function () {
+                            pano1.setLongitude(180);
+                            pano1.setLatitude(10);
+                        }, 1000);
+                    }
+
+                    $(function () {
 //                    ajoutePano({
 //                        panoramique: "test",
 //                        fenX: "60%",
@@ -71,40 +97,41 @@
 //                        xml: "xml/beauport.xml"
 //                    });
 
-                    ajoutePano({
-                        langue: "fr_FR",
-                        panoramique: "pano2",
-                        fenX: "95%",
-                        fenY: "650px",
-                        xml: "xml/piscine.xml"
-                    });
+                        pano1 = ajoutePano({
+                            langue: "fr_FR",
+                            panoramique: "pano2",
+                            fenX: "95%",
+                            fenY: "650px",
+                            xml: "xml/piscine.xml"
+                        });
+
 //                    ajoutePano({
 //                        panoramique: "pano",
 //                        fenX: "55%",
 //                        fenY: "30%",
 //                        xml: "xml/pontCouvert_1.xml"
 //                    });
-                    $(".reseauSocial-twitter").on("click", function() {
-                        alert(document.location.href);
-                        window.open(
-                                "https://twitter.com/share?url=" + document.location.href
-                                );
-                        return false;
+                        $(".reseauSocial-twitter").on("click", function () {
+                            alert(document.location.href);
+                            window.open(
+                                    "https://twitter.com/share?url=" + document.location.href
+                                    );
+                            return false;
+                        });
+                        $(".reseauSocial-fb").on("click", function () {
+                            window.open(
+                                    "http://www.facebook.com/share.php?u=" + document.location.href
+                                    );
+                            return false;
+                        });
+                        $(".reseauSocial-google").on("click", function () {
+                            window.open(
+                                    "https://plus.google.com/share?url=" + document.location.href + "&amp;hl=fr"
+                                    );
+                            return false;
+                        });
+                        $(".reseauSocial-email").attr("href", "mailto:?body=" + document.location.href + "&amp;hl=fr");
                     });
-                    $(".reseauSocial-fb").on("click", function() {
-                        window.open(
-                                "http://www.facebook.com/share.php?u=" + document.location.href
-                                );
-                        return false;
-                    });
-                    $(".reseauSocial-google").on("click", function() {
-                        window.open(
-                                "https://plus.google.com/share?url=" + document.location.href + "&amp;hl=fr"
-                                );
-                        return false;
-                    });
-                    $(".reseauSocial-email").attr("href", "mailto:?body=" + document.location.href + "&amp;hl=fr");
-                });
             </script>
         </div>
         <footer>
